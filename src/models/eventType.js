@@ -10,22 +10,20 @@ export default function (sequelize, DataTypes) {
       },
       title: {
         type: DataTypes.CHAR,
-        unique: true,
         allowNull: false,
       },
       description: {
         type: DataTypes.TEXT,
-        unique: true,
         allowNull: false,
       },
-      duration_minutes: {
+      durationMinutes: {
         type: DataTypes.INTEGER,
-        // allowNull: false,
+        allowNull: false,
       },
-      googleId: {
-        type: DataTypes.STRING,
-        allowNull: null,
-      },
+      // location: {
+      //   type: DataTypes.TEXT,
+      //   allowNull: false,
+      // },
     },
     {
       hooks: {

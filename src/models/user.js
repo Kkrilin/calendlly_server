@@ -23,7 +23,7 @@ export default function (sequelize, DataTypes) {
       },
       googleId: {
         type: DataTypes.STRING,
-        allowNull: null,
+        // allowNull: null,
       },
     },
     {},
@@ -33,7 +33,7 @@ export default function (sequelize, DataTypes) {
     User.hasMany(models.EventType, {
       foreignKey: 'userId',
     });
-    User.hasMany(models.AvailabilityRule, {
+    User.hasMany(models.Availability, {
       foreignKey: 'userId',
     });
   };

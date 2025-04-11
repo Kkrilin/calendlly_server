@@ -9,6 +9,7 @@ import { logger, transport } from './config/logger.js';
 // import router
 import userRouter from './src/routes/users.js';
 import eventTypeRouter from './src/routes/eventTypes.js';
+import availabilityRouter from './src/routes/availability.js';
 
 // import  middleware
 import errorHandler from './src/middleware/errorHandler.js';
@@ -30,8 +31,6 @@ transport.on('rotate', (oldFilename, newFilename) => {
 // MiddleWare to log requests
 app.use((req, res, next) => {
   logger.info(`Logger initialized successfully ${req.method} ${req.url}`);
-  console.log('////////////////');
-
   next();
 });
 
@@ -54,7 +53,9 @@ app.use('/running', (req, res) => {
 
 // user router
 app.use('/auth', userRouter);
-app.use('/eventtypes', userRouter);
+app.use('/api/*', authenticate);
+app.use('/event-types', eventTypeRouter);
+app.use('/availability', availabilityRouter);
 
 // Middleware to handle "route not found" errors and log them
 app.use((req, res, next) => {
@@ -67,5 +68,5 @@ app.use((req, res, next) => {
 app.use(errorHandler);
 
 app.listen(port, () => {
-  console.log(`server is running on ${port}`);
+  logger.info(`server is running on ${port}`);
 });

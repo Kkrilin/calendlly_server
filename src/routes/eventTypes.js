@@ -1,11 +1,16 @@
 import express from 'express';
-import { registerUser, login, googleAuth } from '../services/user.js';
-import { validateSignUp, validateLogin } from '../middleware/userAuth.js';
+import {
+  getEventType,
+  creatEvent,
+  deleteEventType,
+  getAllEventType,
+} from '../services/eventType.js';
 
 const router = express();
 
-router.post('/', validateSignUp, registerUser);
-router.get('/:id', validateLogin, login);
-router.delete('/:id', googleAuth);
+router.post('/', creatEvent);
+router.get('/', getAllEventType);
+router.get('/:id', getEventType);
+router.delete('/:id', deleteEventType);
 
 export default router;

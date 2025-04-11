@@ -1,6 +1,6 @@
 export default function (sequelize, DataTypes) {
-  const AvailabilityRule = sequelize.define(
-    'AvailabilityRule',
+  const Availability = sequelize.define(
+    'Availability',
     {
       id: {
         type: DataTypes.UUID,
@@ -35,13 +35,13 @@ export default function (sequelize, DataTypes) {
     // },
   );
 
-  AvailabilityRule.associate = (models) => {
-    AvailabilityRule.belongsTo(models.User, {
+  Availability.associate = (models) => {
+    Availability.belongsTo(models.User, {
       foreignKey: {
         fieldName: 'userId',
       },
     });
   };
 
-  return AvailabilityRule;
+  return Availability;
 }

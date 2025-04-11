@@ -3,7 +3,7 @@ import config from '../../config/config.js';
 import { logger } from '../../config/logger.js';
 import user from './user.js';
 import eventType from './eventType.js';
-import availabilityRule from './availabilityRule.js';
+import availability from './availability.js';
 
 const sequelize = new Sequelize(
   config.database,
@@ -37,7 +37,7 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.Op = Op;
 db.sequelize
-  .authenticate()
+  .sync({ force: false })
   .then(async () => {
     logger.info('Database connected');
   })
@@ -47,8 +47,8 @@ db.sequelize
 
 db.User = user(sequelize, DataTypes);
 db.EventType = eventType(sequelize, DataTypes);
-db.AvailabilityRule = availabilityRule(sequelize, DataTypes);
+db.Availability = availability(sequelize, DataTypes);
 db.User.associate(db);
 db.EventType.associate(db);
-db.AvailabilityRule.associate(db);
+db.Availability.associate(db);
 export default db;
