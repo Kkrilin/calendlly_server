@@ -1,6 +1,6 @@
 import db from '../models/index.js';
 
-const user = db.User;
+// const user = db.User;
 
 const UserController = {};
 
@@ -12,7 +12,29 @@ UserController.findOneByName = (name) => {
     },
   };
 
-  return user.findOne(filter);
+  return db.User.findOne(filter);
+};
+
+//  find user by id
+UserController.findOneById = (id) => {
+  const filter = {
+    where: {
+      id,
+    },
+  };
+
+  return db.User.findOne(filter);
+};
+
+// find user bt profileSlug
+UserController.findOneByProfileSlug = (profileSlug) => {
+  const filter = {
+    where: {
+      profileSlug,
+    },
+  };
+
+  return db.User.findOne(filter);
 };
 
 // find user by email
@@ -22,12 +44,12 @@ UserController.findOneByEmail = (email) => {
       email,
     },
   };
-  return user.findOne(filter);
+  return db.User.findOne(filter);
 };
 
 // register the user
 UserController.registerUser = async (values = {}) => {
-  const registeredUser = await user.create(values);
+  const registeredUser = await db.User.create(values);
   if (!registeredUser) {
     throw new Error('user failed to create');
   }

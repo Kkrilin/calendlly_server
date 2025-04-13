@@ -2,9 +2,15 @@ import UserController from '../controllers/user.js';
 import config from '../../config/config.js';
 import jwt from 'jsonwebtoken';
 import bycrypt from 'bcrypt';
+import utils from '../helper/utils.js';
 
 export const registerUser = async function (req, res, next) {
   const values = req.body;
+
+  const baseProfileSlug = utils.slugify(values.email.split('@')[0]);
+  const profileSlug = await utils.uniqueProfileSlug(baseProfileSlug);
+  values.profileSlug = profileSlug;
+
   try {
     const user = await UserController.registerUser(values);
     if (user) {
@@ -14,11 +20,11 @@ export const registerUser = async function (req, res, next) {
       //   res.cookie('jwt', token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
       res.status(201).json({
         success: 1,
-        userdata: { id: user.id, name: user.name, email: user.email },
+        userData: { id: user.id, name: user.name, email: user.email },
         token,
       });
     } else {
-      res.status(409).send({ success: 0, message: 'details are nor correct' });
+      res.status(409).send({ success: 0, message: 'details are not correct' });
     }
   } catch (error) {
     error.status = 409;
@@ -40,7 +46,13 @@ export const login = async function (req, res, next) {
         //   maxAge: 24 * 60 * 60 * 1000,
         //   httpOnly: true,
         // });
-        return res.status(200).json({ success: 1, user, token });
+        return res
+          .status(200)
+          .json({
+            success: 1,
+            userData: { id: user.id, name: user.name, email: user.email },
+            token,
+          });
       } else {
         throw new Error('Authentication failed');
       }
@@ -55,14 +67,19 @@ export const login = async function (req, res, next) {
 
 export const googleAuth = async function (req, res, next) {
   const { name, email, googleId } = req.body;
+
+  const baseProfileSlug = utils.slugify(email.split('@')[0]);
+  const profileSlug = await utils.uniqueProfileSlug(baseProfileSlug);
+
   try {
-    if (!name || !email || !googleId) {
-      throw new Error(`please send ${!name || !email || !googleId}`);
+    if (!name || !email) {
+      throw new Error(`please send name and email`);
     }
     const data = {
       name,
       email,
       googleId,
+      profileSlug,
     };
     let user = await UserController.findOneByEmail(email);
     let status = '';
@@ -78,9 +95,12 @@ export const googleAuth = async function (req, res, next) {
       expiresIn: config.jwtExpiration,
     });
     //   res.cookie('jwt', token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
-    res
-      .status(201)
-      .json({ success: 1, userData: { name, email, googleId }, token, status });
+    res.status(201).json({
+      success: 1,
+      userData: { id: user.id, name, email, googleId },
+      token,
+      status,
+    });
   } catch (error) {
     error.status = 409;
     next(error);

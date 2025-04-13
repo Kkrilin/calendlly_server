@@ -11,7 +11,7 @@ eventTypeController.findAllByUserId = (userId) => {
       userId,
     },
   };
-  return eventType.findAll(filter);
+  return db.EventType.findAll(filter);
 };
 
 //  find user by name
@@ -21,7 +21,7 @@ eventTypeController.findOneById = (id) => {
       id,
     },
   };
-  return eventType.findOne(filter);
+  return db.EventType.findOne(filter);
 };
 
 // find user by email
@@ -31,12 +31,12 @@ eventTypeController.deleteById = (id) => {
       id,
     },
   };
-  return eventType.distroy(filter);
+  return db.EventType.destroy(filter);
 };
 
 // create event_type
 eventTypeController.creatEventType = async (values = {}) => {
-  const eventType = await eventType.create(values);
+  const eventType = await db.EventType.create(values);
   if (!eventType) {
     throw new Error('event Type failed to create');
   }

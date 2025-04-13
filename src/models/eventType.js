@@ -14,7 +14,6 @@ export default function (sequelize, DataTypes) {
       },
       description: {
         type: DataTypes.TEXT,
-        allowNull: false,
       },
       durationMinutes: {
         type: DataTypes.INTEGER,

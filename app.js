@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import cors from 'cors';
 import { logger, transport } from './config/logger.js';
-// import db from './models/index.js';
+import db from './src/models/index.js';
 
 // import router
 import userRouter from './src/routes/users.js';
@@ -54,8 +54,8 @@ app.use('/running', (req, res) => {
 // user router
 app.use('/auth', userRouter);
 app.use('/api/*', authenticate);
-app.use('/event-types', eventTypeRouter);
-app.use('/availability', availabilityRouter);
+app.use('/api/event-types', eventTypeRouter);
+app.use('/api/availability', availabilityRouter);
 
 // Middleware to handle "route not found" errors and log them
 app.use((req, res, next) => {

@@ -2,10 +2,9 @@ import EventTypeController from '../controllers/eventType.js';
 
 export const getAllEventType = async function (req, res, next) {
   const { userId } = req;
-
   try {
     const eventTypes = await EventTypeController.findAllByUserId(userId);
-    return req.status(200).json({ sucess: 1, eventTypes });
+    return res.status(200).json({ sucess: 1, eventTypes });
   } catch (error) {
     error.status = 404;
     next(error);
@@ -17,7 +16,7 @@ export const getEventType = async function (req, res, next) {
 
   try {
     const eventType = await EventTypeController.findOneById(id);
-    return req.status(200).json({ sucess: 1, eventType });
+    return res.status(200).json({ sucess: 1, eventType });
   } catch (error) {
     error.status = 404;
     next(error);
@@ -29,7 +28,7 @@ export const deleteEventType = async function (req, res, next) {
 
   try {
     const eventType = await EventTypeController.deleteById(id);
-    return req
+    return res
       .status(200)
       .json({ sucess: 1, message: 'eventType deleted SuccessFull' });
   } catch (error) {
@@ -40,12 +39,11 @@ export const deleteEventType = async function (req, res, next) {
 
 export const creatEvent = async function (req, res, next) {
   const { userId } = req;
-  const { title, description, durationMinutes } = req.body;
-
+  const { eventName, description, duration } = req.body;
   const values = {
-    title,
-    description,
-    durationMinutes,
+    title: eventName,
+    description: description || '',
+    durationMinutes: duration,
     userId,
   };
 

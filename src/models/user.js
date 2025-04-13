@@ -9,7 +9,7 @@ export default function (sequelize, DataTypes) {
       },
       name: {
         type: DataTypes.STRING,
-        unique: true,
+        // unique: true,
         allowNull: false,
       },
       email: {
@@ -20,6 +20,11 @@ export default function (sequelize, DataTypes) {
       password: {
         type: DataTypes.STRING,
         // allowNull: false,
+      },
+      profileSlug: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false,
       },
       googleId: {
         type: DataTypes.STRING,

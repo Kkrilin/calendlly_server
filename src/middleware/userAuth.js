@@ -38,7 +38,7 @@ export const validateLogin = async (req, res, next) => {
   try {
     const user = await UserController.findOneByEmail(email);
     if (!user) {
-      throw new Error('Please check the email and try again');
+      throw new Error('user with email is not regsiter');
     }
     next();
   } catch (error) {
@@ -57,6 +57,10 @@ export const authenticate = async (req, res, next) => {
       throw new Error('user authentication falied');
     }
     const decoded = jwt.verify(token, config.secretKey);
+    const user = await UserController.findOneById(decoded.id);
+    if (!user) {
+      throw new Error('user doest not exist');
+    }
     req.userId = decoded.id;
     next();
   } catch (error) {
