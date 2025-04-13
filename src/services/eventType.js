@@ -1,4 +1,5 @@
 import EventTypeController from '../controllers/eventType.js';
+import UserController from '../controllers/user.js';
 
 export const getAllEventType = async function (req, res, next) {
   const { userId } = req;
@@ -16,6 +17,25 @@ export const getEventType = async function (req, res, next) {
 
   try {
     const eventType = await EventTypeController.findOneById(id);
+    return res.status(200).json({ sucess: 1, eventType });
+  } catch (error) {
+    error.status = 404;
+    next(error);
+  }
+};
+
+export const getEventTypeForBook = async function (req, res, next) {
+  const { userId, eventId } = req.params;
+
+  try {
+    const user = await UserController.findOneById(userId);
+    if (!user) {
+      throw new Error('user do not exist');
+    }
+    const eventType = await EventTypeController.findOneByIdForBook(
+      userId,
+      eventId,
+    );
     return res.status(200).json({ sucess: 1, eventType });
   } catch (error) {
     error.status = 404;

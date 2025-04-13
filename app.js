@@ -54,8 +54,12 @@ app.use('/running', (req, res) => {
 // user router
 app.use('/auth', userRouter);
 app.use('/api/*', authenticate);
+// procted route
 app.use('/api/event-types', eventTypeRouter);
-app.use('/api/availability', availabilityRouter);
+app.use('/api/availabilities', availabilityRouter);
+
+// unprotected
+app.use('/book/look-up', eventTypeRouter);
 
 // Middleware to handle "route not found" errors and log them
 app.use((req, res, next) => {

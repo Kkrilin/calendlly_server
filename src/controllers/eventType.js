@@ -14,11 +14,22 @@ eventTypeController.findAllByUserId = (userId) => {
   return db.EventType.findAll(filter);
 };
 
-//  find user by name
+//  find event by id
 eventTypeController.findOneById = (id) => {
   const filter = {
     where: {
       id,
+    },
+  };
+  return db.EventType.findOne(filter);
+};
+
+//  find event for book
+eventTypeController.findOneByIdForBook = (userId, id) => {
+  const filter = {
+    where: {
+      id,
+      userId,
     },
   };
   return db.EventType.findOne(filter);

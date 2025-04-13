@@ -9,10 +9,11 @@ availabilityController.findAllByUserId = (userId) => {
   const filter = {
     where: {
       userId,
-      active: 1,
+      // active: 1,
     },
+    order: [['day_of_week', 'ASC']],
   };
-  return availability.findAll(filter);
+  return db.Availability.findAll(filter);
 };
 
 //  find availability by id
@@ -22,7 +23,7 @@ availabilityController.findOneById = (id) => {
       id,
     },
   };
-  return availability.findOne(filter);
+  return db.Availability.findOne(filter);
 };
 
 // update availibility
@@ -33,16 +34,24 @@ availabilityController.updateById = (userId, id, value) => {
       id,
     },
   };
-  return availability.update(value, filter);
+  return db.Availability.update(value, filter);
 };
 
 // create availability
-availabilityController.creatEventType = async (values = {}) => {
-  const availability = await availability.create(values);
+availabilityController.creatAvailability = async (values = {}) => {
+  const availability = await db.Availability.create(values);
   if (!availability) {
     throw new Error('availability failed to create');
   }
   return availability;
+};
+
+availabilityController.bulkCreateAvailability = async (values = []) => {
+  const availabilities = await db.Availability.bulkCreate(values);
+  if (!availabilities) {
+    throw new Error('availability failed to create');
+  }
+  return availabilities;
 };
 
 export default availabilityController;

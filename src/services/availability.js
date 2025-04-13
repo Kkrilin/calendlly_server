@@ -15,7 +15,7 @@ export const getAllAvailability = async function (req, res, next) {
 
   try {
     const availability = await AvailabilityController.findAllByUserId(userId);
-    return req.status(200).json({ sucess: 1, availability });
+    return res.status(200).json({ sucess: 1, availability });
   } catch (error) {
     error.status = 404;
     next(error);
@@ -24,7 +24,7 @@ export const getAllAvailability = async function (req, res, next) {
 
 export const createAvailability = async function (req, res, next) {
   const { userId } = req;
-  const { dayOfWeek, startTime, endTime, active } = req.body;
+  const { dayOfWeek, startTime, endTime, active, availabilities } = req.body;
 
   const values = {
     day_of_week: dayOfWeeks[dayOfWeek],
@@ -35,8 +35,28 @@ export const createAvailability = async function (req, res, next) {
   };
 
   try {
-    const eventType = await AvailabilityController.creatAvailability(values);
-    return res.status(201).json({ sucess: 1, eventType });
+    if (
+      availabilities &&
+      Array.isArray(availabilities) &&
+      availabilities.length
+    ) {
+      const availabilityValues = availabilities.map((av) => {
+        return {
+          day_of_week: dayOfWeeks[av.dayOfWeek],
+          start_time: av.startTime,
+          end_time: av.endTime,
+          active: av.active,
+          userId,
+        };
+      });
+      console.log('availabilityValues', availabilityValues);
+      const eventTypes =
+        await AvailabilityController.bulkCreateAvailability(availabilityValues);
+      return res.status(201).json({ sucess: 1, eventTypes });
+    } else {
+      const eventType = await AvailabilityController.creatAvailability(values);
+      return res.status(201).json({ sucess: 1, eventType });
+    }
   } catch (error) {
     error.status = 401;
     next(error);

@@ -7,11 +7,11 @@ export default function (sequelize, DataTypes) {
         defaultValue: DataTypes.UUIDV4, // Or DataTypes.UUIDV1
         primaryKey: true,
       },
-      title: {
-        type: DataTypes.CHAR,
-        unique: true,
-        allowNull: false,
-      },
+      // title: {
+      //   type: DataTypes.CHAR,
+      //   unique: true,
+      //   allowNull: false,
+      // },
       day_of_week: {
         type: DataTypes.INTEGER,
         allowNull: false,
