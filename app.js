@@ -9,7 +9,9 @@ import db from './src/models/index.js';
 // import router
 import userRouter from './src/routes/users.js';
 import eventTypeRouter from './src/routes/eventTypes.js';
-import availabilityRouter from './src/routes/availability.js';
+import availabilityRouter from './src/routes/availabilities.js';
+import bookingRouter from './src/routes/bookings.js';
+import publicRouter from './src/routes/publics.js';
 
 // import  middleware
 import errorHandler from './src/middleware/errorHandler.js';
@@ -57,9 +59,11 @@ app.use('/api/*', authenticate);
 // procted route
 app.use('/api/event-types', eventTypeRouter);
 app.use('/api/availabilities', availabilityRouter);
+app.use('/api/bookings', bookingRouter);
 
-// unprotected
-app.use('/book/look-up', eventTypeRouter);
+// public route
+app.use('/bookings', publicRouter);
+
 
 // Middleware to handle "route not found" errors and log them
 app.use((req, res, next) => {

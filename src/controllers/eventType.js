@@ -1,6 +1,6 @@
 import db from '../models/index.js';
 
-const eventType = db.EventType;
+// const eventType = db.EventType;
 
 const eventTypeController = {};
 

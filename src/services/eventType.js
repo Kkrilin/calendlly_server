@@ -1,3 +1,4 @@
+import availabilityController from '../controllers/availability.js';
 import EventTypeController from '../controllers/eventType.js';
 import UserController from '../controllers/user.js';
 
@@ -25,16 +26,16 @@ export const getEventType = async function (req, res, next) {
 };
 
 export const getEventTypeForBook = async function (req, res, next) {
-  const { userId, eventId } = req.params;
-
+  const { userId, eventTypeId } = req.params;
   try {
+    // const availabilities = await availabilityController.findAllByUserId(userId);
     const user = await UserController.findOneById(userId);
     if (!user) {
       throw new Error('user do not exist');
     }
     const eventType = await EventTypeController.findOneByIdForBook(
       userId,
-      eventId,
+      eventTypeId,
     );
     return res.status(200).json({ sucess: 1, eventType });
   } catch (error) {

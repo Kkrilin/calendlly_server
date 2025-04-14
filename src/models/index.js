@@ -4,6 +4,7 @@ import { logger } from '../../config/logger.js';
 import user from './user.js';
 import eventType from './eventType.js';
 import availability from './availability.js';
+import booking from './booking.js';
 
 const sequelize = new Sequelize(
   config.database,
@@ -48,7 +49,9 @@ db.sequelize
 db.User = user(sequelize, DataTypes);
 db.EventType = eventType(sequelize, DataTypes);
 db.Availability = availability(sequelize, DataTypes);
+db.Booking = booking(sequelize, DataTypes);
 db.User.associate(db);
 db.EventType.associate(db);
 db.Availability.associate(db);
+db.Booking.associate(db);
 export default db;

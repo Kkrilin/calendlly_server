@@ -41,6 +41,9 @@ export default function (sequelize, DataTypes) {
     User.hasMany(models.Availability, {
       foreignKey: 'userId',
     });
+    User.hasMany(models.Booking, {
+      foreignKey: 'userId',
+    });
   };
 
   return User;

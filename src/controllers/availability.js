@@ -37,6 +37,18 @@ availabilityController.updateById = (userId, id, value) => {
   return db.Availability.update(value, filter);
 };
 
+//  find one by dayoFWeek
+availabilityController.findAllByDayOfWeek = (userId, dayOfWeek) => {
+  const filter = {
+    where: {
+      userId,
+      day_of_week: dayOfWeek,
+      active: 1,
+    },
+  };
+  return db.Availability.findOne(filter);
+};
+
 // create availability
 availabilityController.creatAvailability = async (values = {}) => {
   const availability = await db.Availability.create(values);

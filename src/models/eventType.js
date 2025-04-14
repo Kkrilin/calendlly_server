@@ -40,6 +40,12 @@ export default function (sequelize, DataTypes) {
         fieldName: 'userId',
       },
     });
+    EventType.hasMany(models.Booking, {
+      foreignKey: {
+        fieldName: 'eventTypeId',
+      },
+    });
+    EventType.belongsToMany(models.Booking, { through: 'Event_Booking' });
   };
 
   return EventType;
