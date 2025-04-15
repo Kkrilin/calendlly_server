@@ -53,10 +53,7 @@ export const validTimeSlots = async function (req, res, next) {
   const { userId, eventTypeId } = req.params;
   const { meetingDate } = req.query;
 
-  console.log('req.params', req.params);
-  console.log('req.query', new Date(meetingDate));
   const dayOfWeek = new Date(meetingDate).getDay();
-  console.log(dayOfWeek, 'dadada');
   try {
     const eventType = await EventTypeController.findOneByIdForBook(
       userId,
@@ -123,6 +120,17 @@ export const createBooking = async function (req, res, next) {
     return res.status(201).json({ sucess: 1, booking });
   } catch (error) {
     error.status = 401;
+    next(error);
+  }
+};
+
+export const getAllEventForBook = async function (req, res, next) {
+  const { userId } = req.params;
+  try {
+    const eventTypes = await EventTypeController.findAllByUserId(userId);
+    return res.status(200).json({ sucess: 1, eventTypes });
+  } catch (error) {
+    error.status = 404;
     next(error);
   }
 };

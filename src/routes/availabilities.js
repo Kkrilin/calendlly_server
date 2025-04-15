@@ -10,7 +10,7 @@ const router = express();
 
 router.post('/', createAvailability);
 router.get('/', getAllAvailability);
-router.put('/status/:id', updateAvailabilityStatus);
+// router.put('/status/:id', updateAvailabilityStatus);
 router.put('/:id', updateAvailability);
 
 // router.delete('/:id', deleteEventTypebyId);

@@ -31,6 +31,7 @@ eventTypeController.findOneByIdForBook = (userId, id) => {
       id,
       userId,
     },
+    include: { model: db.User },
   };
   return db.EventType.findOne(filter);
 };

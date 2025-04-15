@@ -57,6 +57,7 @@ app.use('/running', (req, res) => {
 app.use('/auth', userRouter);
 app.use('/api/*', authenticate);
 // procted route
+app.use('/api/users', userRouter);
 app.use('/api/event-types', eventTypeRouter);
 app.use('/api/availabilities', availabilityRouter);
 app.use('/api/bookings', bookingRouter);

@@ -34,6 +34,7 @@ bookingController.findAllByDateFilter = (userId, targetDate, nextDay) => {
         [db.Op.gte]: targetDate,
         [db.Op.lt]: nextDay,
       },
+      userId,
     },
   };
   return db.Booking.findAll(filter);

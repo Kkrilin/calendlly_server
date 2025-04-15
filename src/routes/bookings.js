@@ -7,7 +7,7 @@ import {
 const router = express();
 
 router.get('/', getAllBooking);
-router.post('/:id', deleteBooking);
+router.delete('/:id', deleteBooking);
 
 // public
 

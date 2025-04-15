@@ -49,7 +49,6 @@ export const createAvailability = async function (req, res, next) {
           userId,
         };
       });
-      console.log('availabilityValues', availabilityValues);
       const eventTypes =
         await AvailabilityController.bulkCreateAvailability(availabilityValues);
       return res.status(201).json({ sucess: 1, eventTypes });
@@ -66,9 +65,8 @@ export const createAvailability = async function (req, res, next) {
 export const updateAvailability = async function (req, res, next) {
   const { id } = req.params;
   const { userId } = req;
-  const { dayOfWeek, startTime, endTime, active } = req.body;
+  const { startTime, endTime, active } = req.body;
   const values = {
-    day_of_week: dayOfWeeks[dayOfWeek],
     start_time: startTime,
     end_time: endTime,
     active,
@@ -77,15 +75,15 @@ export const updateAvailability = async function (req, res, next) {
 
   try {
     const existAvailability = await AvailabilityController.findOneById(id);
-    if (!existAvailability || !existAvailability.active) {
-      throw new Error('existAvailability is not active');
+    if (!existAvailability) {
+      throw new Error('Availability is not exist');
     }
     const availability = await AvailabilityController.updateById(
       userId,
       id,
       values,
     );
-    return req.status(200).json({
+    return res.status(200).json({
       sucess: 1,
       availability,
       message: 'eventType update SuccessFull',

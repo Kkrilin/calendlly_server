@@ -20,6 +20,8 @@ const config = {
     ssl: process.env.SSl,
     clientUrl: process.env.CLIENT_URL,
     googleClientId: process.env.GOOGLE_CLIENT_ID,
+    googleSecretClient: process.env.GOOGLE_CLIENT_SECRET,
+    encryptionKey: process.env.ENCRYPTION_KEY,
   },
   production: {
     serverPort: process.env.SERVER_PORT,

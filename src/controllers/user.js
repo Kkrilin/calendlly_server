@@ -47,6 +47,17 @@ UserController.findOneByEmail = (email) => {
   return db.User.findOne(filter);
 };
 
+
+// find user by googleId
+UserController.findOneByGoogleId = (googleId) => {
+  const filter = {
+    where: {
+      googleId,
+    },
+  };
+  return db.User.findOne(filter);
+};
+
 // register the user
 UserController.registerUser = async (values = {}) => {
   const registeredUser = await db.User.create(values);
