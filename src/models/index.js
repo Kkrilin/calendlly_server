@@ -15,10 +15,11 @@ const sequelize = new Sequelize(
     port: config.port,
     dialect: config.dialect,
     logging: false,
+    ssl: config.ssl === 'true',
     dialectOptions: config.ssl
       ? {
           ssl: {
-            require: config.ssl,
+            require: config.ssl === 'true',
             rejectUnauthorized: false,
           },
         }
