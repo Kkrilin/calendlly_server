@@ -6,6 +6,7 @@ import utils from '../helper/utils.js';
 import { google } from 'googleapis';
 
 const { googleClientId, googleSecretClient, redirectUri } = config;
+console.log('config', config);
 const oauth2Client = new google.auth.OAuth2(
   googleClientId,
   googleSecretClient,
