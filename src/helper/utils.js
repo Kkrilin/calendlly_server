@@ -3,7 +3,7 @@ import db from '../models/index.js';
 import UserController from '../controllers/user.js';
 import eventTypeController from '../controllers/eventType.js';
 import BookingController from '../controllers/booking.js';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import config from '../../config/config.js';
 import crypto from 'crypto';
 import { Buffer } from 'buffer';
@@ -100,41 +100,53 @@ utils.getTimeSlots = async (
 ) => {
   const slots = [];
 
+  // Always work in IST
   const selectedDate = moment.utc(meetingDate).tz('Asia/Kolkata');
   const now = moment().tz('Asia/Kolkata');
   const targetDate = selectedDate.format('YYYY-MM-DD');
-  let startDateTime = null;
+
+  let startDateTime;
 
   if (selectedDate.isSame(now, 'day')) {
     const futureTime = now.clone().add(4, 'hours').startOf('hour');
     const slotStartTime = moment.tz(
       `${targetDate} ${startTime}`,
       'YYYY-MM-DD HH:mm',
-      'Asia/Kolkata',
+      'Asia/Kolkata'
     );
 
-    if (futureTime.isBefore(slotStartTime)) {
-      startDateTime = slotStartTime;
-    } else {
-      startDateTime = futureTime;
-    }
+    startDateTime = futureTime.isBefore(slotStartTime)
+      ? slotStartTime
+      : futureTime;
   } else {
-    startDateTime = moment.tz(`${targetDate} ${startTime}`, 'YYYY-MM-DD HH:mm', 'Asia/Kolkata');
+    startDateTime = moment.tz(
+      `${targetDate} ${startTime}`,
+      'YYYY-MM-DD HH:mm',
+      'Asia/Kolkata'
+    );
   }
-  const endDateTime = moment(`${targetDate} ${endTime}`, 'YYYY-MM-DD HH:mm', 'Asia/Kolkata');
 
-  const nextDay = moment(targetDate).add(1, 'day').format('YYYY-MM-DD');
+  const endDateTime = moment.tz(
+    `${targetDate} ${endTime}`,
+    'YYYY-MM-DD HH:mm',
+    'Asia/Kolkata'
+  );
+
+  // Fetch bookings (assuming they are stored in UTC)
+  const nextDay = selectedDate.clone().add(1, 'day').format('YYYY-MM-DD');
   const bookings = await BookingController.findAllByDateFilter(
     userId,
     targetDate,
-    nextDay,
+    nextDay
   );
+
   const plainBookings = bookings.map((b) => b.get({ plain: true }));
 
+  // Convert booking times to IST for comparison
   const bookedIntervals = plainBookings
     .map((book) => ({
-      start: moment(book.start_time),
-      end: moment(book.end_time),
+      start: moment.utc(book.start_time).tz('Asia/Kolkata'),
+      end: moment.utc(book.end_time).tz('Asia/Kolkata'),
     }))
     .sort((a, b) => a.start - b.start);
 
@@ -142,7 +154,6 @@ utils.getTimeSlots = async (
 
   for (let i = 0; i <= bookedIntervals.length; i++) {
     const booking = bookedIntervals[i];
-
     const nextBlockedStart = booking ? booking.start : endDateTime;
 
     while (
@@ -154,7 +165,7 @@ utils.getTimeSlots = async (
       const potentialEnd = current.clone().add(meetingDuration, 'minutes');
       if (potentialEnd.isAfter(endDateTime)) break;
 
-      slots.push(utils.format12Hour(current.toDate()));
+      slots.push(utils.format12Hour(current.toDate())); // Assuming this outputs 12hr string
       current.add(meetingDuration, 'minutes');
     }
 
