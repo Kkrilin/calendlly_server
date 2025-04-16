@@ -12,7 +12,7 @@ console.log('googleSecretClient', googleSecretClient);
 const oauth2Client = new google.auth.OAuth2(
   googleClientId,
   googleSecretClient,
-  'http://localhost:5173', // your frontend redirect URI
+  config.redirectURI, // your frontend redirect URI
 );
 
 export const registerUser = async function (req, res, next) {
