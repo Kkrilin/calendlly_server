@@ -100,22 +100,28 @@ utils.getTimeSlots = async (
 ) => {
   const slots = [];
 
-  const targetDate = moment.utc(meetingDate).tz('Asia/Kolkata').format('YYYY-MM-DD');
-  const now = moment().tz('Asia/Kolkata');
   const selectedDate = moment.utc(meetingDate).tz('Asia/Kolkata');
+  const now = moment().tz('Asia/Kolkata');
+  const targetDate = selectedDate.format('YYYY-MM-DD');
   let startDateTime = null;
+
   if (selectedDate.isSame(now, 'day')) {
     const futureTime = now.clone().add(4, 'hours').startOf('hour');
-    const slotStartTime = moment(`${targetDate} ${startTime}`, 'YYYY-MM-DD HH:mm');
+    const slotStartTime = moment.tz(
+      `${targetDate} ${startTime}`,
+      'YYYY-MM-DD HH:mm',
+      'Asia/Kolkata',
+    );
+
     if (futureTime.isBefore(slotStartTime)) {
       startDateTime = slotStartTime;
     } else {
       startDateTime = futureTime;
     }
   } else {
-    startDateTime = moment(`${targetDate} ${startTime}`, 'YYYY-MM-DD HH:mm');
+    startDateTime = moment.tz(`${targetDate} ${startTime}`, 'YYYY-MM-DD HH:mm', 'Asia/Kolkata');
   }
-  const endDateTime = moment(`${targetDate} ${endTime}`, 'YYYY-MM-DD HH:mm');
+  const endDateTime = moment(`${targetDate} ${endTime}`, 'YYYY-MM-DD HH:mm', 'Asia/Kolkata');
 
   const nextDay = moment(targetDate).add(1, 'day').format('YYYY-MM-DD');
   const bookings = await BookingController.findAllByDateFilter(
