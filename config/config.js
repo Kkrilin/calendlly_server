@@ -41,7 +41,7 @@ const config = {
     googleClientId: process.env.GOOGLE_CLIENT_ID,
     googleSecretClient: process.env.GOOGLE_CLIENT_SECRET,
     encryptionKey: process.env.ENCRYPTION_KEY,
-    redirectUri: process.env.GOOGLE_RIDIRECT_URI,
+    redirectUri: process.env.GOOGLE_REDIRECT_URI,
   },
 };
 

@@ -5,11 +5,11 @@ import bycrypt from 'bcrypt';
 import utils from '../helper/utils.js';
 import { google } from 'googleapis';
 
-const { googleClientId, googleSecretClient } = config;
+const { googleClientId, googleSecretClient, redirectUri } = config;
 const oauth2Client = new google.auth.OAuth2(
   googleClientId,
   googleSecretClient,
-  config.redirectUri,
+  redirectUri,
 );
 
 export const registerUser = async function (req, res, next) {
