@@ -100,9 +100,9 @@ utils.getTimeSlots = async (
 ) => {
   const slots = [];
 
-  const targetDate = moment(meetingDate).format('YYYY-MM-DD');
-  const now = moment();
-  const selectedDate = moment(meetingDate);
+  const targetDate = moment.utc(meetingDate).tz('Asia/Kolkata').format('YYYY-MM-DD');
+  const now = moment().tz('Asia/Kolkata');
+  const selectedDate = moment.utc(meetingDate).tz('Asia/Kolkata');
   let startDateTime = null;
   if (selectedDate.isSame(now, 'day')) {
     const futureTime = now.clone().add(4, 'hours').startOf('hour');
