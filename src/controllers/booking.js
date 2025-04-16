@@ -11,6 +11,7 @@ bookingController.findAllByUserId = (userId) => {
       userId,
     },
     include: [{ model: db.EventType }, { model: db.User }],
+    order: [['start_time', 'ASC']],
   };
   return db.Booking.findAll(filter);
 };
@@ -51,9 +52,9 @@ bookingController.deleteById = (id) => {
 };
 
 // create event_type
-bookingController.createBooking = async (values = {}) => {
+bookingController.createBooking = async (values = {}, options = {}) => {
   console.log('values', values);
-  const booking = await db.Booking.create(values);
+  const booking = await db.Booking.create(values, options);
   if (!booking) {
     throw new Error('booking failed to create');
   }

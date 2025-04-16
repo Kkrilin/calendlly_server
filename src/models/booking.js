@@ -13,11 +13,11 @@ export default function (sequelize, DataTypes) {
       //   allowNull: false,
       // },
       guest_name: {
-        type: DataTypes.CHAR,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       guest_email: {
-        type: DataTypes.CHAR,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       start_time: {
@@ -27,6 +27,10 @@ export default function (sequelize, DataTypes) {
       end_time: {
         type: DataTypes.DATE,
         allowNull: false,
+      },
+      reminderSent: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
     },
     {

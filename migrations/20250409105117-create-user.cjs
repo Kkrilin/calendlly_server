@@ -29,16 +29,15 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
       },
+      profileSlug: {
+        type: Sequelize.STRING,
+        unique: true,
+        allowNull: false,
+      },
       googleId: {
         type: Sequelize.STRING,
       },
-      pictureUrl: {
-        type: Sequelize.STRING,
-      },
-      email_verified: {
-        type: Sequelize.INTEGER,
-        defaultValue: 0,
-      },
+      refreshToken: Sequelize.TEXT,
     });
   },
 

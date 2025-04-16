@@ -16,7 +16,7 @@ UserController.findOneByName = (name) => {
 };
 
 //  find user by id
-UserController.findOneById = (id) => {
+UserController.findOneById = (id, options = {}) => {
   const filter = {
     where: {
       id,
@@ -46,7 +46,6 @@ UserController.findOneByEmail = (email) => {
   };
   return db.User.findOne(filter);
 };
-
 
 // find user by googleId
 UserController.findOneByGoogleId = (googleId) => {

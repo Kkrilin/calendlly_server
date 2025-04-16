@@ -30,7 +30,7 @@ export default function (sequelize, DataTypes) {
         type: DataTypes.STRING,
         // allowNull: null,
       },
-      refreshToken: DataTypes.TEXT,
+      refreshToken: DataTypes.TEXT
     },
     {},
   );

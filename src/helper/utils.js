@@ -105,8 +105,13 @@ utils.getTimeSlots = async (
   const selectedDate = moment(meetingDate);
   let startDateTime = null;
   if (selectedDate.isSame(now, 'day')) {
-    const futureTime = now.clone().add(5, 'hours').startOf('hour');
-    startDateTime = futureTime;
+    const futureTime = now.clone().add(4, 'hours').startOf('hour');
+    const slotStartTime = moment(`${targetDate} ${startTime}`, 'YYYY-MM-DD HH:mm');
+    if (futureTime.isBefore(slotStartTime)) {
+      startDateTime = slotStartTime;
+    } else {
+      startDateTime = futureTime;
+    }
   } else {
     startDateTime = moment(`${targetDate} ${startTime}`, 'YYYY-MM-DD HH:mm');
   }

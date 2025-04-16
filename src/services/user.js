@@ -140,7 +140,6 @@ export const googleAuth = async function (req, res, next) {
 export const updateUser = async function (req, res, next) {
   const { userId } = req;
   const { email, name } = req.body;
-  console.log('req.body', req.body);
   const value = {
     email,
     name,
@@ -150,12 +149,14 @@ export const updateUser = async function (req, res, next) {
     if (!userId) {
       throw new Error('user does not exist');
     }
-    console.log('11111111', userById.email, email);
     if (userById.email !== email) {
       const userByEmail = await UserController.findOneByEmail(email);
       if (userByEmail) {
         throw new Error('email is already in use');
       }
+      const baseProfileSlug = utils.slugify(email.split('@')[0]);
+      const profileSlug = await utils.uniqueProfileSlug(baseProfileSlug);
+      value.profileSlug = profileSlug;
     }
     const user = await userById.update(value);
     return res.status(200).json({

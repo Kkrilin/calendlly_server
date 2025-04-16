@@ -1,6 +1,7 @@
 import availabilityController from '../controllers/availability.js';
 import EventTypeController from '../controllers/eventType.js';
 import UserController from '../controllers/user.js';
+import utils from '../helper/utils.js';
 
 export const getAllEventType = async function (req, res, next) {
   const { userId } = req;
@@ -61,11 +62,15 @@ export const deleteEventType = async function (req, res, next) {
 export const creatEvent = async function (req, res, next) {
   const { userId } = req;
   const { eventName, description, duration } = req.body;
+  const baseEventSlug = utils.slugify(eventName);
+  const eventSlug = await utils.uniqueEventTypeSlug(baseEventSlug);
+
   const values = {
     title: eventName,
     description: description || '',
     durationMinutes: duration,
     userId,
+    eventSlug,
   };
 
   try {

@@ -9,7 +9,7 @@ export default function (sequelize, DataTypes) {
         primaryKey: true,
       },
       title: {
-        type: DataTypes.CHAR,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       description: {
@@ -19,17 +19,17 @@ export default function (sequelize, DataTypes) {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      eventSlug: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false,
+      },
       // location: {
       //   type: DataTypes.TEXT,
       //   allowNull: false,
       // },
     },
     {
-      hooks: {
-        beforeSave: (attributes) => {
-          attributes.set('slug', utils.slugify(attributes.get('title')));
-        },
-      },
       paranoid: true, // Enables soft deletes
     },
   );

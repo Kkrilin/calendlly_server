@@ -24,6 +24,16 @@ eventTypeController.findOneById = (id) => {
   return db.EventType.findOne(filter);
 };
 
+//  find event by slug
+eventTypeController.findOneByEventTyepSlug = (eventSlug) => {
+  const filter = {
+    where: {
+      eventSlug,
+    },
+  };
+  return db.EventType.findOne(filter);
+};
+
 //  find event for book
 eventTypeController.findOneByIdForBook = (userId, id) => {
   const filter = {
