@@ -5,7 +5,6 @@ import user from './user.js';
 import eventType from './eventType.js';
 import availability from './availability.js';
 import booking from './booking.js';
-
 const sequelize = new Sequelize(
   config.database,
   config.username,

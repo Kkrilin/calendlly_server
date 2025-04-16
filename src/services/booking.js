@@ -15,7 +15,6 @@ const oauth2Client = new google.auth.OAuth2(googleClientId, googleSecretClient);
 
 export const getAllBooking = async function (req, res, next) {
   const { userId } = req;
-  console.log('sssssssssssss');
   try {
     let bookings = await BookingController.findAllByUserId(userId);
     if (bookings.length) {
@@ -29,8 +28,6 @@ export const getAllBooking = async function (req, res, next) {
     const bookingsss = Object.fromEntries(
       Object.values(bookings).sort((a, b) => b[0] - a[0]),
     );
-
-    console.log('bookingsss', bookingsss);
 
     return res.status(200).json({ sucess: 1, bookings });
   } catch (error) {

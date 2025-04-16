@@ -8,11 +8,11 @@ import { google } from 'googleapis';
 const { googleClientId, googleSecretClient } = config;
 console.log('googleClientId', googleClientId);
 console.log('googleSecretClient', googleSecretClient);
-
+console.log('config.redirectURI', config.redirectUri);
 const oauth2Client = new google.auth.OAuth2(
   googleClientId,
   googleSecretClient,
-  config.redirectURI, // your frontend redirect URI
+  config.redirectUri, // your frontend redirect URI
 );
 
 export const registerUser = async function (req, res, next) {

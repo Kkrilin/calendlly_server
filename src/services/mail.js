@@ -42,7 +42,7 @@ emailService.toGuest = async ({
   name,
   email,
   guestName,
-  guestEMail,
+  guestEmail,
   eventName,
   formattedDate,
   duration,
@@ -58,7 +58,7 @@ emailService.toGuest = async ({
 
   await transporter.sendMail({
     from: process.env.MAIL_USER,
-    to: guestEMail,
+    to: guestEmail,
     subject: 'Booking Confirmation',
     html,
   });
@@ -91,9 +91,11 @@ emailService.sendBookingConfirmation = async ({
       eventName,
       formattedDate,
       duration,
+      guestEmail,
     };
+    console.log(' email data', data)
     await emailService.toHost(data);
-    await emailService.toGuest({ ...data, guestEmail });
+    await emailService.toGuest(data);
     // const html = `
     //   <h3>Hi ${guestName},</h3>
     //   <p>Your booking for an event on  <strong>${eventName}</strong> on google calender is confirmed.</p>
