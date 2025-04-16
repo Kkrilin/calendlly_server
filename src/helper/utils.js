@@ -83,10 +83,20 @@ utils.mergeDateAndTimeWithDuration = (dateStr, timeStr, duration) => {
 
   if (period?.toLowerCase() === 'pm' && h !== 12) h += 12;
   if (period?.toLowerCase() === 'am' && h === 12) h = 0;
-  const [year, month, day] = dateStr.split('-').map(Number);
-  const startTime = new Date(year, month - 1, day, h, m);
 
-  const endTime = new Date(startTime.getTime() + duration * 60000);
+  const [year, month, day] = dateStr.split('-').map(Number);
+
+  // Build moment in IST
+  const startTimeIST = moment.tz(
+    { year, month: month - 1, day, hour: h, minute: m },
+    'Asia/Kolkata',
+  );
+
+  const endTimeIST = startTimeIST.clone().add(duration, 'minutes');
+
+  // Convert to UTC date objects for storage
+  const startTime = startTimeIST.utc().toDate();
+  const endTime = endTimeIST.utc().toDate();
 
   return { startTime, endTime };
 };
