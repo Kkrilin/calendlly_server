@@ -22,6 +22,7 @@ const config = {
     googleClientId: process.env.GOOGLE_CLIENT_ID,
     googleSecretClient: process.env.GOOGLE_CLIENT_SECRET,
     encryptionKey: process.env.ENCRYPTION_KEY,
+    redirectURI: process.env.GOOGLE_RIDIRECT_URI,
   },
   production: {
     serverPort: process.env.SERVER_PORT,
@@ -37,6 +38,9 @@ const config = {
     jwtExpiration: process.env.JWT_EXPIRATION,
     clientUrl: process.env.CLIENT_URL,
     googleClientId: process.env.GOOGLE_CLIENT_ID,
+    googleSecretClient: process.env.GOOGLE_CLIENT_SECRET,
+    encryptionKey: process.env.ENCRYPTION_KEY,
+    redirectURI: process.env.GOOGLE_RIDIRECT_URI,
   },
 };
 
