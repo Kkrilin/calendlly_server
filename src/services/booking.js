@@ -64,7 +64,7 @@ export const validTimeSlots = async function (req, res, next) {
   const { userId, eventTypeId } = req.params;
   const { meetingDate } = req.query;
 
-  const dayOfWeek = new Date(meetingDate).getDay();
+  const dayOfWeek = moment.utc(meetingDate).tz('Asia/Kolkata').day();
   try {
     const eventType = await EventTypeController.findOneByIdForBook(
       userId,
@@ -78,7 +78,7 @@ export const validTimeSlots = async function (req, res, next) {
       dayOfWeek,
     );
     if (!availability) {
-      throw new Error('availability is configured');
+      throw new Error('availability is not configured');
     }
     const startTime = availability?.start_time;
     const endTime = availability?.end_time;
