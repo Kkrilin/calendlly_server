@@ -112,7 +112,7 @@ utils.getTimeSlots = async (
     const slotStartTime = moment.tz(
       `${targetDate} ${startTime}`,
       'YYYY-MM-DD HH:mm',
-      'Asia/Kolkata'
+      'Asia/Kolkata',
     );
 
     startDateTime = futureTime.isBefore(slotStartTime)
@@ -122,14 +122,14 @@ utils.getTimeSlots = async (
     startDateTime = moment.tz(
       `${targetDate} ${startTime}`,
       'YYYY-MM-DD HH:mm',
-      'Asia/Kolkata'
+      'Asia/Kolkata',
     );
   }
 
   const endDateTime = moment.tz(
     `${targetDate} ${endTime}`,
     'YYYY-MM-DD HH:mm',
-    'Asia/Kolkata'
+    'Asia/Kolkata',
   );
 
   // Fetch bookings (assuming they are stored in UTC)
@@ -137,7 +137,7 @@ utils.getTimeSlots = async (
   const bookings = await BookingController.findAllByDateFilter(
     userId,
     targetDate,
-    nextDay
+    nextDay,
   );
 
   const plainBookings = bookings.map((b) => b.get({ plain: true }));
@@ -178,7 +178,10 @@ utils.getTimeSlots = async (
 };
 
 utils.format12Hour = (date) => {
-  return date.toLocaleTimeString('en-US', {
+  const istDate = new Date(
+    date.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }),
+  );
+  return istDate.toLocaleTimeString('en-US', {
     hour: '2-digit',
     minute: '2-digit',
     hour12: true,
