@@ -16,19 +16,19 @@ bookingController.findAllByUserId = (userId) => {
   return db.Booking.findAll(filter);
 };
 
-// //  find booking by id
-// bookingController.findAllByUserId = (userId) => {
-//   const filter = {
-//     where: {
-//       userId,
-//     },
-//     include: [{ model: db.EventType }, { model: db.User }],
-//   };
-//   return db.Booking.findAll(filter);
-// };
+//  find booking by id
+bookingController.getOneById = (id) => {
+  const filter = {
+    where: {
+      id,
+    },
+    include: [{ model: db.EventType }, { model: db.User }],
+  };
+  return db.Booking.findOne(filter);
+};
 
 //  find booking by id
-bookingController.findAllByDateFilter = (userId, targetDate, nextDay) => {
+bookingController.findAllByDateFilter = (userId, targetDate, nextDay, bookingId) => {
   const filter = {
     where: {
       start_time: {
@@ -38,6 +38,9 @@ bookingController.findAllByDateFilter = (userId, targetDate, nextDay) => {
       userId,
     },
   };
+  if (bookingId) {
+    filter.where.id = {[db.Op.ne]: bookingId };
+  }
   return db.Booking.findAll(filter);
 };
 
@@ -58,6 +61,17 @@ bookingController.createBooking = async (values = {}, options = {}) => {
     throw new Error('booking failed to create');
   }
   return booking;
+};
+
+// update booking
+bookingController.updateById = (id, value, options = {}) => {
+  const filter = {
+    where: {
+      id,
+    },
+    ...options,
+  };
+  return db.Booking.update(value, filter);
 };
 
 export default bookingController;

@@ -20,13 +20,15 @@ emailService.toHost = async ({
   eventName,
   formattedDate,
   duration,
+  reschedule,
 }) => {
   const html = `
   <h3>Hi ${name},</h3>
-  <p>Your booking for an event on  <strong>${eventName}</strong> on google calender is confirmed.</p>
+  <p>Your booking for an event <strong>${eventName}</strong> on google calender is confirmed.</p>
   <h4>you hosting and event with <strong> ${guestName}</strong></h4>
   <p><strong>Date:</strong> ${formattedDate}</p>
   <p><strong>Duration:</strong> ${duration} minutes</p>
+  ${reschedule ? '<h3>this event is rescheduled</h3>' : ''}
   <p>this is system generated mail do not reply</p>
 `;
 
@@ -46,6 +48,7 @@ emailService.toGuest = async ({
   eventName,
   formattedDate,
   duration,
+  reschedule,
 }) => {
   const html = `
   <h3>Hi ${guestName},</h3>
@@ -53,6 +56,7 @@ emailService.toGuest = async ({
   <h4>you as guest being hosted by <strong> ${name}</strong> for an event</h4>
   <p><strong>Date:</strong> ${formattedDate}</p>
   <p><strong>Duration:</strong> ${duration} minutes</p>
+  ${reschedule ? '<h3>this event is rescheduled</h3>' : ''}
   <p>this is system generated mail do not reply</p>
 `;
 
@@ -73,6 +77,7 @@ emailService.sendBookingConfirmation = async ({
   date,
   duration,
   name,
+  reschedule,
 }) => {
   const timeZone = 'Asia/Kolkata';
   const fullDateTime = moment.tz(
@@ -92,8 +97,8 @@ emailService.sendBookingConfirmation = async ({
       formattedDate,
       duration,
       guestEmail,
+      reschedule,
     };
-    console.log(' email data', data)
     await emailService.toHost(data);
     await emailService.toGuest(data);
     // const html = `

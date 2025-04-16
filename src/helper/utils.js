@@ -107,6 +107,7 @@ utils.getTimeSlots = async (
   meetingDuration,
   meetingDate,
   userId,
+  bookingId,
 ) => {
   const slots = [];
 
@@ -125,9 +126,7 @@ utils.getTimeSlots = async (
       'Asia/Kolkata',
     );
 
-    startDateTime = futureTime.isBefore(slotStartTime)
-      ? slotStartTime
-      : futureTime;
+    startDateTime = futureTime.isBefore(slotStartTime) ? slotStartTime : futureTime;
   } else {
     startDateTime = moment.tz(
       `${targetDate} ${startTime}`,
@@ -148,6 +147,7 @@ utils.getTimeSlots = async (
     userId,
     targetDate,
     nextDay,
+    bookingId,
   );
 
   const plainBookings = bookings.map((b) => b.get({ plain: true }));

@@ -32,6 +32,19 @@ export default function (sequelize, DataTypes) {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      isReschedule: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      rescheduleBy: {
+        type: DataTypes.STRING,
+      },
+      googleEventId: {
+        type: DataTypes.STRING,
+      },
+      rescheduleReason: {
+        type: DataTypes.STRING,
+      },
     },
     {
       paranoid: true, // Enables soft deletes

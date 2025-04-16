@@ -6,7 +6,6 @@ import utils from '../helper/utils.js';
 import { google } from 'googleapis';
 
 const { googleClientId, googleSecretClient, redirectUri } = config;
-console.log('config', config);
 const oauth2Client = new google.auth.OAuth2(
   googleClientId,
   googleSecretClient,
@@ -74,7 +73,6 @@ export const login = async function (req, res, next) {
 
 export const googleAuth = async function (req, res, next) {
   const { code } = req.body;
-  console.log('code', code);
   try {
     const { tokens } = await oauth2Client.getToken(code);
     oauth2Client.setCredentials(tokens);

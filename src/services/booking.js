@@ -8,7 +8,7 @@ import { google } from 'googleapis';
 import config from '../../config/config.js';
 import db from '../models/index.js';
 import emailService from './mail.js';
-import sequelize from 'sequelize';
+import sequelize, { where } from 'sequelize';
 
 const { googleClientId, googleSecretClient } = config;
 const oauth2Client = new google.auth.OAuth2(googleClientId, googleSecretClient);
@@ -62,8 +62,8 @@ export const deleteBooking = async function (req, res, next) {
 
 export const validTimeSlots = async function (req, res, next) {
   const { userId, eventTypeId } = req.params;
-  const { meetingDate } = req.query;
-
+  const { meetingDate, bookingId } = req.query;
+  console.log('bookingId', bookingId);
   const dayOfWeek = moment.utc(meetingDate).tz('Asia/Kolkata').day();
   try {
     const eventType = await EventTypeController.findOneByIdForBook(
@@ -91,6 +91,7 @@ export const validTimeSlots = async function (req, res, next) {
         meetingDuration,
         meetingDate,
         userId,
+        bookingId,
       );
     }
 
@@ -157,7 +158,7 @@ export const createBooking = async function (req, res, next) {
         const timeZone = 'Asia/Kolkata';
         const formattedStart = moment.tz(startTime, timeZone).format();
         const formattedEnd = moment.tz(endTime, timeZone).format();
-        await calendar.events.insert({
+        const resGoogleEvent = await calendar.events.insert({
           calendarId: 'primary',
           requestBody: {
             summary: `Meeting: ${eventType.title}`,
@@ -173,6 +174,14 @@ export const createBooking = async function (req, res, next) {
             attendees: [{ email: guestEmail }, { email: user.email }],
           },
         });
+        const googleEventId = resGoogleEvent.data.id;
+        const value = {
+          googleEventId,
+        };
+        // console.log()
+        // db.Booking.update(value, { where: { id: booking.id } });
+        booking.googleEventId = googleEventId;
+        await booking.save();
       } catch (calendarErr) {
         console.error(
           'Google Calendar Error:',
@@ -182,7 +191,6 @@ export const createBooking = async function (req, res, next) {
       }
     }
     await t.commit();
-    console.log(mailData);
     await emailService.sendBookingConfirmation(mailData);
     return res.status(201).json({ sucess: 1, booking });
   } catch (error) {
@@ -199,6 +207,112 @@ export const getAllEventForBook = async function (req, res, next) {
     return res.status(200).json({ sucess: 1, eventTypes });
   } catch (error) {
     error.status = 404;
+    next(error);
+  }
+};
+
+export const getBookings = async function (req, res, next) {
+  const { bookingId } = req.params;
+
+  try {
+    const booking = await BookingController.getOneById(bookingId);
+    if (!booking) {
+      throw new Error('booking is cancelled');
+    }
+    return res.status(201).json({ sucess: 1, booking });
+  } catch (error) {
+    error.status = 401;
+    next(error);
+  }
+};
+
+export const rescheduleBooking = async function (req, res, next) {
+  const { bookingId } = req.params;
+  const { bookDate, bookTime, description, rescheduleReason } = req.body;
+  const t = await db.sequelize.transaction();
+  const mailData = {};
+  try {
+    const booking = await BookingController.getOneById(bookingId);
+    const user = booking.User;
+    if (!user) throw new Error('User not found');
+    const eventType = booking.EventType;
+    if (!eventType) {
+      throw new Error(
+        'event type Does not exist or deleled booking can not possible',
+      );
+    }
+    mailData.guestEmail = booking.guest_email;
+    mailData.guestName = booking.guest_name;
+    mailData.eventName = eventType.title;
+    mailData.duration = eventType.durationMinutes;
+    mailData.date = bookDate;
+    mailData.hostEmail = user.email;
+    mailData.name = user.name;
+    mailData.bookTime = bookTime;
+    mailData.reschedule = true;
+    const { startTime, endTime } = utils.mergeDateAndTimeWithDuration(
+      bookDate,
+      bookTime,
+      eventType.durationMinutes,
+    );
+    const values = {
+      start_time: startTime,
+      end_time: endTime,
+      rescheduleReason: rescheduleReason,
+      rescheduleBy: user.name,
+      isReschedule: true,
+    };
+    const updatedBooking = await BookingController.updateById(
+      bookingId,
+      values,
+      {
+        transaction: t,
+      },
+    );
+    if (user.googleId && user.refreshToken && booking.googleEventId) {
+      const refreshToken = utils.decrypt(user.refreshToken);
+      oauth2Client.setCredentials({ refresh_token: refreshToken });
+      try {
+        const { token } = await oauth2Client.getAccessToken();
+        oauth2Client.setCredentials({
+          refresh_token: refreshToken,
+          access_token: token,
+        });
+        const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
+        const timeZone = 'Asia/Kolkata';
+        const formattedStart = moment.tz(startTime, timeZone).format();
+        const formattedEnd = moment.tz(endTime, timeZone).format();
+        const res = await calendar.events.update({
+          calendarId: 'primary',
+          eventId: booking.googleEventId,
+          requestBody: {
+            summary: `Meeting: ${eventType.title}`,
+            description,
+            start: {
+              dateTime: formattedStart,
+              timeZone,
+            },
+            end: {
+              dateTime: formattedEnd,
+              timeZone,
+            },
+            attendees: [{ email: booking.guest_email }, { email: user.email }],
+          },
+        });
+      } catch (calendarErr) {
+        console.error(
+          'Google Calendar Error:',
+          calendarErr.response?.data || calendarErr.message || calendarErr,
+        );
+        throw new Error('Booking saved but calendar sync failed');
+      }
+    }
+    await t.commit();
+    await emailService.sendBookingConfirmation(mailData);
+    return res.status(201).json({ sucess: 1, booking });
+  } catch (error) {
+    await t.rollback();
+    error.status = 401;
     next(error);
   }
 };
