@@ -6,13 +6,10 @@ import utils from '../helper/utils.js';
 import { google } from 'googleapis';
 
 const { googleClientId, googleSecretClient } = config;
-console.log('googleClientId', googleClientId);
-console.log('googleSecretClient', googleSecretClient);
-console.log('config.redirectURI', config.redirectUri);
 const oauth2Client = new google.auth.OAuth2(
   googleClientId,
   googleSecretClient,
-  config.redirectUri, // your frontend redirect URI
+  config.redirectUri,
 );
 
 export const registerUser = async function (req, res, next) {
