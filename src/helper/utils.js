@@ -86,7 +86,6 @@ utils.mergeDateAndTimeWithDuration = (dateStr, timeStr, duration) => {
 
   const [year, month, day] = dateStr.split('-').map(Number);
 
-  // Build moment in IST
   const startTimeIST = moment.tz(
     { year, month: month - 1, day, hour: h, minute: m },
     'Asia/Kolkata',
@@ -94,7 +93,6 @@ utils.mergeDateAndTimeWithDuration = (dateStr, timeStr, duration) => {
 
   const endTimeIST = startTimeIST.clone().add(duration, 'minutes');
 
-  // Convert to UTC date objects for storage
   const startTime = startTimeIST.utc().toDate();
   const endTime = endTimeIST.utc().toDate();
 
@@ -111,7 +109,6 @@ utils.getTimeSlots = async (
 ) => {
   const slots = [];
 
-  // Always work in IST
   const selectedDate = moment.utc(meetingDate).tz('Asia/Kolkata');
   const now = moment().tz('Asia/Kolkata');
   const targetDate = selectedDate.format('YYYY-MM-DD');
@@ -141,7 +138,6 @@ utils.getTimeSlots = async (
     'Asia/Kolkata',
   );
 
-  // Fetch bookings (assuming they are stored in UTC)
   const nextDay = selectedDate.clone().add(1, 'day').format('YYYY-MM-DD');
   const bookings = await BookingController.findAllByDateFilter(
     userId,
@@ -149,10 +145,7 @@ utils.getTimeSlots = async (
     nextDay,
     bookingId,
   );
-
   const plainBookings = bookings.map((b) => b.get({ plain: true }));
-
-  // Convert booking times to IST for comparison
   const bookedIntervals = plainBookings
     .map((book) => ({
       start: moment.utc(book.start_time).tz('Asia/Kolkata'),
@@ -175,7 +168,7 @@ utils.getTimeSlots = async (
       const potentialEnd = current.clone().add(meetingDuration, 'minutes');
       if (potentialEnd.isAfter(endDateTime)) break;
 
-      slots.push(utils.format12Hour(current.toDate())); // Assuming this outputs 12hr string
+      slots.push(utils.format12Hour(current.toDate()));
       current.add(meetingDuration, 'minutes');
     }
 

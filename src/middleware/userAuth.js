@@ -19,7 +19,7 @@ export const validateSignUp = async (req, re, next) => {
 
     const user = await UserController.findOneByEmail(email);
     if (user && user.googleId) {
-      throw new Error('Invalid request: user is registered with password');
+      throw new Error('Invalid request: user is registered with google account');
     }
     if (user) {
       throw new Error('Invalid request: userEmail is already in use');

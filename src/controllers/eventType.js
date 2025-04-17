@@ -30,6 +30,7 @@ eventTypeController.findOneByEventTyepSlug = (eventSlug) => {
     where: {
       eventSlug,
     },
+    paranoid: false,
   };
   return db.EventType.findOne(filter);
 };

@@ -21,6 +21,7 @@ emailService.toHost = async ({
   formattedDate,
   duration,
   reschedule,
+  rescheduleReason,
 }) => {
   const html = `
   <h3>Hi ${name},</h3>
@@ -29,6 +30,7 @@ emailService.toHost = async ({
   <p><strong>Date:</strong> ${formattedDate}</p>
   <p><strong>Duration:</strong> ${duration} minutes</p>
   ${reschedule ? '<h3>this event is rescheduled</h3>' : ''}
+  ${reschedule ? `<p> reason:${rescheduleReason}</p>` : ''}
   <p>this is system generated mail do not reply</p>
 `;
 
@@ -49,6 +51,7 @@ emailService.toGuest = async ({
   formattedDate,
   duration,
   reschedule,
+  rescheduleReason,
 }) => {
   const html = `
   <h3>Hi ${guestName},</h3>
@@ -57,9 +60,10 @@ emailService.toGuest = async ({
   <p><strong>Date:</strong> ${formattedDate}</p>
   <p><strong>Duration:</strong> ${duration} minutes</p>
   ${reschedule ? '<h3>this event is rescheduled</h3>' : ''}
+  ${reschedule ? `<p> reason:${rescheduleReason}</p>` : ''}
   <p>this is system generated mail do not reply</p>
 `;
-
+  console.log('guestEmail', guestEmail);
   await transporter.sendMail({
     from: process.env.MAIL_USER,
     to: guestEmail,
@@ -78,6 +82,7 @@ emailService.sendBookingConfirmation = async ({
   duration,
   name,
   reschedule,
+  rescheduleReason,
 }) => {
   const timeZone = 'Asia/Kolkata';
   const fullDateTime = moment.tz(
@@ -98,6 +103,7 @@ emailService.sendBookingConfirmation = async ({
       duration,
       guestEmail,
       reschedule,
+      rescheduleReason,
     };
     await emailService.toHost(data);
     await emailService.toGuest(data);

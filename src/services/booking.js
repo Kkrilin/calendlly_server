@@ -230,7 +230,9 @@ export const rescheduleBooking = async function (req, res, next) {
   const { bookingId } = req.params;
   const { bookDate, bookTime, description, rescheduleReason } = req.body;
   const t = await db.sequelize.transaction();
-  const mailData = {};
+  const mailData = {
+    rescheduleReason,
+  };
   try {
     const booking = await BookingController.getOneById(bookingId);
     const user = booking.User;

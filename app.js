@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import cors from 'cors';
 import { logger, transport } from './config/logger.js';
-import './src/services/cron.js'; // Ensure the cron file is imported
+import './src/services/cron.js';
 import db from './src/models/index.js';
 
 // import router
