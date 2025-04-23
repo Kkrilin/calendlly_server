@@ -4,7 +4,6 @@ import js from '@eslint/js';
 import prettier from 'eslint-config-prettier';
 import pluginPrettier from 'eslint-plugin-prettier';
 
-// @ts-expect-error: No type declarations for eslint-config-google
 import google from 'eslint-config-google';
 
 export default [

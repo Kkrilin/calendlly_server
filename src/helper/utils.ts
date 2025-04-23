@@ -4,20 +4,20 @@ import UserController from '../controllers/user.js';
 import eventTypeController from '../controllers/eventType.js';
 import BookingController from '../controllers/booking.js';
 import moment from 'moment-timezone';
-import config from '../../config/config.js';
+import config from '../config/config.js';
 import crypto from 'crypto';
 import { Buffer } from 'buffer';
 
 const { encryptionKey } = config;
 const IV_LENGTH = 16;
 
-const utils = {};
+const utils: { [key: string]: (...args: any[]) => any } = {};
 
 utils.encrypt = (text) => {
   const iv = crypto.randomBytes(IV_LENGTH);
   const cipher = crypto.createCipheriv(
     'aes-256-cbc',
-    Buffer.from(encryptionKey),
+    Buffer.from(encryptionKey!),
     iv,
   );
   let encrypted = cipher.update(text);
@@ -31,7 +31,7 @@ utils.decrypt = (text) => {
   const encryptedText = Buffer.from(parts[1], 'hex');
   const decipher = crypto.createDecipheriv(
     'aes-256-cbc',
-    Buffer.from(encryptionKey),
+    Buffer.from(encryptionKey!),
     iv,
   );
   let decrypted = decipher.update(encryptedText);
@@ -51,7 +51,7 @@ utils.slugify = (val) => {
   );
 };
 
-const checkProfileSlugExist = async (slug) =>
+const checkProfileSlugExist = async (slug: string) =>
   await UserController.findOneByProfileSlug(slug);
 
 utils.uniqueProfileSlug = async (slug) => {
@@ -64,7 +64,7 @@ utils.uniqueProfileSlug = async (slug) => {
   return uniqueSlug;
 };
 
-const checkEventTypeSlugExist = async (slug) =>
+const checkEventTypeSlugExist = async (slug: string) =>
   await eventTypeController.findOneByEventTyepSlug(slug);
 
 utils.uniqueEventTypeSlug = async (slug) => {
@@ -77,7 +77,7 @@ utils.uniqueEventTypeSlug = async (slug) => {
   return uniqueSlug;
 };
 
-utils.mergeDateAndTimeWithDuration = (dateStr, timeStr, duration) => {
+utils.mergeDateAndTimeWithDuration = (dateStr: string, timeStr: string, duration: string) => {
   const [time, period] = timeStr.split(' ');
   let [h, m] = time.split(':').map(Number);
 
@@ -123,7 +123,9 @@ utils.getTimeSlots = async (
       'Asia/Kolkata',
     );
 
-    startDateTime = futureTime.isBefore(slotStartTime) ? slotStartTime : futureTime;
+    startDateTime = futureTime.isBefore(slotStartTime)
+      ? slotStartTime
+      : futureTime;
   } else {
     startDateTime = moment.tz(
       `${targetDate} ${startTime}`,

@@ -2,7 +2,7 @@ import express from 'express';
 import config from './config/config';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
-import cors from 'cors';
+import cors, { CorsOptions } from 'cors';
 import { logger, transport } from './helper/logger';
 // import './services/cron';
 import db from './models/index';
@@ -39,7 +39,7 @@ app.use((req, res, next) => {
 
 app.use(morgan(config.env === 'development' ? 'dev' : 'combined'));
 
-const corsOptions = {
+const corsOptions: CorsOptions = {
   origin: config.clientUrl, // e.g., https://myapp.com
   credentials: true, // allow cookies to be sent
 };

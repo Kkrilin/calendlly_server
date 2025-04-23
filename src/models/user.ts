@@ -1,4 +1,4 @@
-import {Sequelize,DataTypes} from 'sequelize';
+import {Sequelize, DataTypes} from 'sequelize';
 import {UserInstance, UserModelStatic } from '../types/model/user';
 
 // Final export

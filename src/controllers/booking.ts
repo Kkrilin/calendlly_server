@@ -1,8 +1,8 @@
 import db from '../models/index.js';
-
+import { ControllerType } from '../types/index';
 // const booking = db.Booking;
 
-const bookingController = {};
+const bookingController: ControllerType = {};
 
 //  find all by user
 bookingController.findAllByUserId = (userId) => {

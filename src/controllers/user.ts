@@ -1,8 +1,9 @@
 import db from '../models/index.js';
-
+import { ControllerType } from '../types/index.js';
 // const user = db.User;
 
-const UserController = {};
+
+const UserController : ControllerType = {};
 
 //  find user by name
 UserController.findOneByName = (name) => {

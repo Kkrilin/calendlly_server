@@ -1,14 +1,8 @@
 import express from 'express';
-import { getEventTypeForBook } from '../services/eventType.js';
-import {
-  createBooking,
-  validTimeSlots,
-  getAllEventForBook,
-  getBookings,
-  rescheduleBooking,
-} from '../services/booking.js';
+import {getEventTypeForBook} from '../services/eventType';
+import {createBooking,validTimeSlots,getAllEventForBook,getBookings,rescheduleBooking} from '../services/booking';
 
-const router = express();
+const router = express.Router();
 
 router.get('/look-up/:userId', getAllEventForBook);
 router.get('/look-up/:userId/:eventTypeId', getEventTypeForBook);

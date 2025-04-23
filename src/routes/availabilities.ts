@@ -6,7 +6,7 @@ import {
   updateAvailabilityStatus,
 } from '../services/availability.js';
 
-const router = express();
+const router = express.Router();
 
 router.post('/', createAvailability);
 router.get('/', getAllAvailability);

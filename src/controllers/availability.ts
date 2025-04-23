@@ -1,8 +1,8 @@
-import db from '../models/index.js';
+import db from '../models/index';
+import { ControllerType } from '../types/index';
 
-const availability = db.Availability;
 
-const availabilityController = {};
+const availabilityController : ControllerType = {};
 
 //  find all by user
 availabilityController.findAllByUserId = (userId) => {

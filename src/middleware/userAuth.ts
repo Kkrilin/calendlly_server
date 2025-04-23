@@ -2,10 +2,24 @@ import UserController from '../controllers/user.js';
 import jwt from 'jsonwebtoken';
 import config from '../config/config';
 import { OAuth2Client } from 'google-auth-library';
-import bycrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
+import { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
+import { error } from 'console';
+
 const client = new OAuth2Client(config.googleClientId);
+
+// 👇 Extend Request interface to allow custom userId
+declare global {
+  namespace Express {
+    interface Request {
+      userId?: string;
+    }
+  }
+}
+
+
 // validate register request
-export const validateSignUp = async (req, re, next) => {
+export const validateSignUp = async (req: Request, res: Response, next: NextFunction) => {
   const { name, email, password } = req.body;
 
   try {
@@ -17,23 +31,23 @@ export const validateSignUp = async (req, re, next) => {
     //   throw new Error('Invalid request: userName is already in use');
     // }
 
-    const user = await UserController.findOneByEmail(email);
+    const user: ReturnType<typeof UserController.findOneByEmail> = await UserController.findOneByEmail(email);
     if (user && user.googleId) {
       throw new Error('Invalid request: user is registered with google account');
     }
     if (user) {
       throw new Error('Invalid request: userEmail is already in use');
     }
-    req.body.password = await bycrypt.hash(password, 10);
+    req.body.password = await bcrypt.hash(password, 10);
     next();
-  } catch (error) {
+  } catch (error: any) {
     error.status = 400;
     next(error);
   }
 };
 
 // validate login request
-export const validateLogin = async (req, res, next) => {
+export const validateLogin = async (req: Request, res: Response, next: NextFunction) => {
   const { email } = req.body;
   try {
     const user = await UserController.findOneByEmail(email);
@@ -41,31 +55,34 @@ export const validateLogin = async (req, res, next) => {
       throw new Error('user with email is not regsiter');
     }
     next();
-  } catch (error) {
+  } catch (error: any) {
     error.status = 401;
     next(error);
   }
 };
 
 // authenticate protected routes
-export const authenticate = async (req, res, next) => {
-  console.log('req.headers', req.headers)
+export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; // Extract token from "Bearer <token>"
+  const token = authHeader && authHeader.split(' ')[1];
 
   try {
-    if (!token) {
-      throw new Error('user authentication falied');
-    }
+    if (!token) throw new Error('User authentication failed');
+    if (!config.secretKey) throw new Error('User authentication failed');
+
     const decoded = jwt.verify(token, config.secretKey);
-    const user = await UserController.findOneById(decoded.id);
-    if (!user) {
-      throw new Error('user doest not exist');
+    if (typeof decoded === 'string' || !('id' in decoded)) {
+      throw new Error('Invalid token payload');
     }
+
+    const user = await UserController.findOneById(decoded.id);
+    if (!user) throw new Error('User does not exist');
+
     req.userId = decoded.id;
     next();
-  } catch (error) {
+  } catch (error: any) {
     error.status = 401;
     next(error);
   }
 };
+

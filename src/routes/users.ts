@@ -1,8 +1,8 @@
 import express from 'express';
-import { registerUser, login, googleAuth, updateUser } from '../services/user.js';
-import { validateSignUp, validateLogin } from '../middleware/userAuth.js';
+import { registerUser, login, googleAuth, updateUser } from '../services/user';
+import { validateSignUp, validateLogin } from '../middleware/userAuth';
 
-const router = express();
+const router = express.Router();
 
 router.post('/signup', validateSignUp, registerUser);
 router.post('/login', validateLogin, login);

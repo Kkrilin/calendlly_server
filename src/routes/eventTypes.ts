@@ -1,12 +1,7 @@
 import express from 'express';
-import {
-  getEventType,
-  creatEvent,
-  deleteEventType,
-  getAllEventType,
-} from '../services/eventType.js';
+import {getEventType,creatEvent,deleteEventType,getAllEventType} from '../services/eventType';
 
-const router = express();
+const router = express.Router();
 
 router.post('/', creatEvent);
 router.get('/', getAllEventType);

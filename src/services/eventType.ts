@@ -1,32 +1,33 @@
+import { NextFunction, Request, Response } from 'express';
 import availabilityController from '../controllers/availability.js';
 import EventTypeController from '../controllers/eventType.js';
 import UserController from '../controllers/user.js';
 import utils from '../helper/utils.js';
 
-export const getAllEventType = async function (req, res, next) {
+export const getAllEventType = async function (req: Request, res: Response, next: NextFunction) {
   const { userId } = req;
   try {
     const eventTypes = await EventTypeController.findAllByUserId(userId);
     return res.status(200).json({ sucess: 1, eventTypes });
-  } catch (error) {
+  } catch (error:any) {
     error.status = 404;
     next(error);
   }
 };
 
-export const getEventType = async function (req, res, next) {
+export const getEventType = async function (req: Request, res: Response, next: NextFunction) {
   const { id } = req.params;
 
   try {
     const eventType = await EventTypeController.findOneById(id);
     return res.status(200).json({ sucess: 1, eventType });
-  } catch (error) {
+  } catch (error: any) {
     error.status = 404;
     next(error);
   }
 };
 
-export const getEventTypeForBook = async function (req, res, next) {
+export const getEventTypeForBook = async function (req: Request, res: Response, next: NextFunction) {
   const { userId, eventTypeId } = req.params;
   try {
     // const availabilities = await availabilityController.findAllByUserId(userId);
@@ -39,13 +40,13 @@ export const getEventTypeForBook = async function (req, res, next) {
       eventTypeId,
     );
     return res.status(200).json({ sucess: 1, eventType });
-  } catch (error) {
+  } catch (error: any) {
     error.status = 404;
     next(error);
   }
 };
 
-export const deleteEventType = async function (req, res, next) {
+export const deleteEventType = async function (req: Request, res: Response, next: NextFunction) {
   const { id } = req.params;
 
   try {
@@ -53,13 +54,13 @@ export const deleteEventType = async function (req, res, next) {
     return res
       .status(200)
       .json({ sucess: 1, message: 'eventType deleted SuccessFull' });
-  } catch (error) {
+  } catch (error: any) {
     error.status = 404;
     next(error);
   }
 };
 
-export const creatEvent = async function (req, res, next) {
+export const creatEvent = async function (req: Request, res: Response, next: NextFunction) {
   const { userId } = req;
   const { eventName, description, duration } = req.body;
   const baseEventSlug = utils.slugify(eventName);
@@ -76,7 +77,7 @@ export const creatEvent = async function (req, res, next) {
   try {
     const eventType = await EventTypeController.creatEventType(values);
     return res.status(201).json({ sucess: 1, eventType });
-  } catch (error) {
+  } catch (error: any) {
     error.status = 401;
     next(error);
   }

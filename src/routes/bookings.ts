@@ -1,15 +1,10 @@
 import express from 'express';
-import {
-  getAllBooking,
-  deleteBooking,
-} from '../services/booking.js';
+import {getAllBooking,deleteBooking} from '../services/booking.js';
 
-const router = express();
+const router = express.Router();
 
 router.get('/', getAllBooking);
 router.delete('/:id', deleteBooking);
-
-// public
 
 
 export default router;
