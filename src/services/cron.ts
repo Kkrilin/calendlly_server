@@ -1,7 +1,7 @@
 import cron from 'node-cron';
 import db from '../models/index.js';
 import emailService from './mail.js';
-import { logger } from '../../config/logger.js';
+import { logger } from '../helper/logger.js';
 
 // cron service for reminder to upcoming event booking every 30 minutes
 cron.schedule('*/30 * * * *', async () => {

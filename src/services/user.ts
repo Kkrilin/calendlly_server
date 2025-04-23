@@ -1,5 +1,5 @@
 import UserController from '../controllers/user.js';
-import config from '../../config/config.js';
+import config from '../config/config.js';
 import jwt from 'jsonwebtoken';
 import bycrypt from 'bcrypt';
 import utils from '../helper/utils.js';

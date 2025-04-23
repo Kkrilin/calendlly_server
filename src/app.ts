@@ -1,22 +1,22 @@
 import express from 'express';
-import config from './config/config.js';
+import config from './config/config';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import cors from 'cors';
-import { logger, transport } from './config/logger.js';
-import './src/services/cron.js';
-import db from './src/models/index.js';
+import { logger, transport } from './helper/logger';
+// import './services/cron';
+import db from './models/index';
 
 // import router
-import userRouter from './src/routes/users.js';
-import eventTypeRouter from './src/routes/eventTypes.js';
-import availabilityRouter from './src/routes/availabilities.js';
-import bookingRouter from './src/routes/bookings.js';
-import publicRouter from './src/routes/publics.js';
+import userRouter from './routes/users';
+import eventTypeRouter from './routes/eventTypes';
+import availabilityRouter from './routes/availabilities';
+import bookingRouter from './routes/bookings';
+import publicRouter from './routes/publics';
 
 // import  middleware
-import errorHandler from './src/middleware/errorHandler.js';
-import { authenticate } from './src/middleware/userAuth.js';
+import errorHandler from './middleware/errorHandler';
+import { authenticate } from './middleware/userAuth';
 
 const app = express();
 const port = config.serverPort || 3000;

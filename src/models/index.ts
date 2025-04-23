@@ -1,24 +1,26 @@
-import { Sequelize, DataTypes, Op } from 'sequelize';
-import config from '../../config/config.js';
-import { logger } from '../../config/logger.js';
+import { Sequelize, DataTypes, Op, Dialect } from 'sequelize';
+import config from '../config/config.js';
+import { logger } from '../helper/logger.js';
 import user from './user.js';
 import eventType from './eventType.js';
 import availability from './availability.js';
 import booking from './booking.js';
+
+console.log('qqqqqqqqqqq', config);
 const sequelize = new Sequelize(
-  config.database,
-  config.username,
-  config.password,
+  config.db.database as string,
+  config.db.username as string,
+  config.db.password,
   {
-    host: config.host,
-    port: config.port,
-    dialect: config.dialect,
+    host: config.db.host,
+    port: parseInt(config.db.port || ''),
+    dialect: config.db.dialect as Dialect,
     logging: false,
-    ssl: config.ssl === 'true',
-    dialectOptions: config.ssl
+    ssl: config.db.ssl === 'true',
+    dialectOptions: config.db.ssl
       ? {
           ssl: {
-            require: config.ssl === 'true',
+            require: config.db.ssl === 'true',
             rejectUnauthorized: false,
           },
         }
