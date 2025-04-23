@@ -1,8 +1,8 @@
 import nodemailer from 'nodemailer';
 import 'dotenv/config';
 import moment from 'moment';
-import { logger } from '../helper/logger.js';
-
+import { logger } from '../helper/logger';
+import { MailData } from '../types/index';
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const emailService = {};
+const emailService: { [key: string]: (...args: any[]) => any } = {};
 
 emailService.toHost = async ({
   name,
@@ -22,7 +22,7 @@ emailService.toHost = async ({
   duration,
   reschedule,
   rescheduleReason,
-}) => {
+}: MailData) => {
   const html = `
   <h3>Hi ${name},</h3>
   <p>Your booking for an event <strong>${eventName}</strong> on google calender is confirmed.</p>
@@ -52,7 +52,7 @@ emailService.toGuest = async ({
   duration,
   reschedule,
   rescheduleReason,
-}) => {
+}: MailData) => {
   const html = `
   <h3>Hi ${guestName},</h3>
   <p>Your booking for an event on  <strong>${eventName}</strong> on google calender is confirmed.</p>
@@ -83,7 +83,7 @@ emailService.sendBookingConfirmation = async ({
   name,
   reschedule,
   rescheduleReason,
-}) => {
+}: MailData) => {
   const timeZone = 'Asia/Kolkata';
   const fullDateTime = moment.tz(
     `${date} ${bookTime}`,
@@ -123,7 +123,7 @@ emailService.sendBookingConfirmation = async ({
     // });
 
     console.log('Email sent successfully');
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error sending email:', error.message);
   }
 };

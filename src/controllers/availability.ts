@@ -38,7 +38,7 @@ availabilityController.updateById = (userId, id, value) => {
 };
 
 //  find one by dayoFWeek
-availabilityController.findAllByDayOfWeek = (userId, dayOfWeek) => {
+availabilityController.findAllByDayOfWeek = (userId: string, dayOfWeek: number) => {
   const filter = {
     where: {
       userId,

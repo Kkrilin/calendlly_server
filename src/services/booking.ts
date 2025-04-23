@@ -1,70 +1,72 @@
-import EventTypeController from '../controllers/eventType.js';
-import BookingController from '../controllers/booking.js';
-import UserController from '../controllers/user.js';
-import utils from '../helper/utils.js';
-import AvailabilityController from '../controllers/availability.js';
+import EventTypeController from '../controllers/eventType';
+import BookingController from '../controllers/booking';
+import UserController from '../controllers/user';
+import utils from '../helper/utils';
+import AvailabilityController from '../controllers/availability';
 import moment from 'moment';
 import { google } from 'googleapis';
-import config from '../../config/config.js';
-import db from '../models/index.js';
-import emailService from './mail.js';
+import config from '../config/config';
+import db from '../models/index';
+import emailService from './mail';
 import sequelize, { where } from 'sequelize';
+import { NextFunction, Request, Response } from 'express';
+import { BookingAttributes } from '../types/model/booking';
 
 const { googleClientId, googleSecretClient } = config;
 const oauth2Client = new google.auth.OAuth2(googleClientId, googleSecretClient);
 
-export const getAllBooking = async function (req, res, next) {
+export const getAllBooking = async function (req: Request, res: Response, next: NextFunction) {
   const { userId } = req;
   try {
     let bookings = await BookingController.findAllByUserId(userId);
     if (bookings.length) {
-      bookings = bookings.reduce((acc, cur) => {
+      const groupedBookings: Record<string, typeof bookings> = bookings.reduce((acc: Record<string, typeof bookings>, cur: BookingAttributes) => {
         const localStringDate = moment(cur.start_time).format('YYYY-MM-DD');
         acc[localStringDate] = acc[localStringDate] || [];
         acc[localStringDate].push(cur);
         return acc;
       }, {});
+      const sortedEntries = Object.entries(groupedBookings).sort(
+        ([dateA], [dateB]) => dateB.localeCompare(dateA)
+      );
+      const bookingsSorted = Object.fromEntries(sortedEntries);
+      res.status(200).json({ sucess: 1, bookings: bookingsSorted });
     }
-    const bookingsss = Object.fromEntries(
-      Object.values(bookings).sort((a, b) => b[0] - a[0]),
-    );
-
-    return res.status(200).json({ sucess: 1, bookings });
-  } catch (error) {
+  } catch (error: any) {
     error.status = 404;
     next(error);
   }
 };
 
-export const getBooking = async function (req, res, next) {
+export const getBooking = async function (req: Request, res: Response, next: NextFunction) {
   const { id } = req.params;
 
   try {
     const booking = await BookingController.findOneById(id);
-    return res.status(200).json({ sucess: 1, booking });
-  } catch (error) {
+     res.status(200).json({ sucess: 1, booking });
+  } catch (error: any) {
     error.status = 404;
     next(error);
   }
 };
 
-export const deleteBooking = async function (req, res, next) {
+export const deleteBooking = async function (req: Request, res: Response, next: NextFunction) {
   const { id } = req.params;
 
   try {
     await BookingController.deleteById(id);
-    return res.status(200).json({ sucess: 1, message: 'Booking canceled' });
-  } catch (error) {
+     res.status(200).json({ sucess: 1, message: 'Booking canceled' });
+  } catch (error: any) {
     error.status = 404;
     next(error);
   }
 };
 
-export const validTimeSlots = async function (req, res, next) {
+export const validTimeSlots = async function (req: Request, res: Response, next: NextFunction) {
   const { userId, eventTypeId } = req.params;
   const { meetingDate, bookingId } = req.query;
   console.log('bookingId', bookingId);
-  const dayOfWeek = moment.utc(meetingDate).tz('Asia/Kolkata').day();
+  const dayOfWeek = moment.utc(meetingDate as string).tz('Asia/Kolkata').day();
   try {
     const eventType = await EventTypeController.findOneByIdForBook(
       userId,
@@ -95,18 +97,18 @@ export const validTimeSlots = async function (req, res, next) {
       );
     }
 
-    return res.status(201).json({ sucess: 1, timeSlots });
-  } catch (error) {
+     res.status(201).json({ sucess: 1, timeSlots });
+  } catch (error: any) {
     error.status = 401;
     next(error);
   }
 };
 
-export const createBooking = async function (req, res, next) {
+export const createBooking = async function (req: Request, res: Response, next: NextFunction) {
   const { userId, eventTypeId } = req.params;
   const { guestName, guestEmail, bookDate, bookTime, description } = req.body;
   const t = await db.sequelize.transaction();
-  const mailData = {
+  const mailData: {[key: string] : any} = {
     guestEmail: guestEmail,
     guestName,
   };
@@ -182,7 +184,7 @@ export const createBooking = async function (req, res, next) {
         // db.Booking.update(value, { where: { id: booking.id } });
         booking.googleEventId = googleEventId;
         await booking.save();
-      } catch (calendarErr) {
+      } catch (calendarErr: any) {
         console.error(
           'Google Calendar Error:',
           calendarErr.response?.data || calendarErr.message || calendarErr,
@@ -192,26 +194,26 @@ export const createBooking = async function (req, res, next) {
     }
     await t.commit();
     await emailService.sendBookingConfirmation(mailData);
-    return res.status(201).json({ sucess: 1, booking });
-  } catch (error) {
+     res.status(201).json({ sucess: 1, booking });
+  } catch (error: any) {
     await t.rollback();
     error.status = 401;
     next(error);
   }
 };
 
-export const getAllEventForBook = async function (req, res, next) {
+export const getAllEventForBook = async function (req: Request, res: Response, next: NextFunction) {
   const { userId } = req.params;
   try {
     const eventTypes = await EventTypeController.findAllByUserId(userId);
-    return res.status(200).json({ sucess: 1, eventTypes });
-  } catch (error) {
+     res.status(200).json({ sucess: 1, eventTypes });
+  } catch (error: any) {
     error.status = 404;
     next(error);
   }
 };
 
-export const getBookings = async function (req, res, next) {
+export const getBookings = async function (req: Request, res: Response, next: NextFunction) {
   const { bookingId } = req.params;
 
   try {
@@ -219,18 +221,18 @@ export const getBookings = async function (req, res, next) {
     if (!booking) {
       throw new Error('booking is cancelled');
     }
-    return res.status(201).json({ sucess: 1, booking });
-  } catch (error) {
+     res.status(201).json({ sucess: 1, booking });
+  } catch (error: any) {
     error.status = 401;
     next(error);
   }
 };
 
-export const rescheduleBooking = async function (req, res, next) {
+export const rescheduleBooking = async function (req: Request, res: Response, next: NextFunction) {
   const { bookingId } = req.params;
   const { bookDate, bookTime, description, rescheduleReason } = req.body;
   const t = await db.sequelize.transaction();
-  const mailData = {
+  const mailData :{[key: string] : any} = {
     rescheduleReason,
   };
   try {
@@ -301,7 +303,7 @@ export const rescheduleBooking = async function (req, res, next) {
             attendees: [{ email: booking.guest_email }, { email: user.email }],
           },
         });
-      } catch (calendarErr) {
+      } catch (calendarErr: any) {
         console.error(
           'Google Calendar Error:',
           calendarErr.response?.data || calendarErr.message || calendarErr,
@@ -311,8 +313,8 @@ export const rescheduleBooking = async function (req, res, next) {
     }
     await t.commit();
     await emailService.sendBookingConfirmation(mailData);
-    return res.status(201).json({ sucess: 1, booking });
-  } catch (error) {
+     res.status(201).json({ sucess: 1, booking });
+  } catch (error: any) {
     await t.rollback();
     error.status = 401;
     next(error);

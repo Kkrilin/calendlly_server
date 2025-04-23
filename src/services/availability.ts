@@ -1,4 +1,6 @@
+import { NextFunction, Request, Response } from 'express';
 import AvailabilityController from '../controllers/availability.js';
+import { throwDeprecation } from 'process';
 
 const dayOfWeeks = {
   sun: 0,
@@ -10,24 +12,33 @@ const dayOfWeeks = {
   sat: 6,
 };
 
-export const getAllAvailability = async function (req, res, next) {
+export const enum  DayOfWeeks {
+  SUN = 'sun',
+  MON = "mon",
+  TUE = 'tue',
+  WED = 'wed',
+  THU = 'thu',
+  FRI = 'fri',
+  SAT = 'sat',
+}
+
+export const getAllAvailability = async function (req: Request,res: Response,next: NextFunction) {
   const { userId } = req;
 
   try {
     const availability = await AvailabilityController.findAllByUserId(userId);
-    return res.status(200).json({ sucess: 1, availability });
-  } catch (error) {
+      res.status(200).json({ sucess: 1, availability });
+  } catch (error: any) {
     error.status = 404;
     next(error);
   }
 };
 
-export const createAvailability = async function (req, res, next) {
+export const createAvailability = async function (req: Request,res: Response,next: NextFunction) {
   const { userId } = req;
   const { dayOfWeek, startTime, endTime, active, availabilities } = req.body;
-
   const values = {
-    day_of_week: dayOfWeeks[dayOfWeek],
+    day_of_week: dayOfWeeks[dayOfWeek as DayOfWeeks],
     start_time: startTime,
     end_time: endTime,
     active,
@@ -35,34 +46,29 @@ export const createAvailability = async function (req, res, next) {
   };
 
   try {
-    if (
-      availabilities &&
-      Array.isArray(availabilities) &&
-      availabilities.length
-    ) {
+    if (availabilities && Array.isArray(availabilities) && availabilities.length) {
       const availabilityValues = availabilities.map((av) => {
         return {
-          day_of_week: dayOfWeeks[av.dayOfWeek],
+          day_of_week: dayOfWeeks[av.dayOfWeek as DayOfWeeks],
           start_time: av.startTime,
           end_time: av.endTime,
           active: av.active,
           userId,
         };
       });
-      const eventTypes =
-        await AvailabilityController.bulkCreateAvailability(availabilityValues);
-      return res.status(201).json({ sucess: 1, eventTypes });
+      const availabilityData = await AvailabilityController.bulkCreateAvailability(availabilityValues);
+       res.status(201).json({ sucess: 1, availabilityData });
     } else {
-      const eventType = await AvailabilityController.creatAvailability(values);
-      return res.status(201).json({ sucess: 1, eventType });
+      const availabilityData = await AvailabilityController.creatAvailability(values);
+       res.status(201).json({ sucess: 1, availabilityData });
     }
-  } catch (error) {
+  } catch (error: any) {
     error.status = 401;
     next(error);
   }
 };
 
-export const updateAvailability = async function (req, res, next) {
+export const updateAvailability = async function (req: Request,res: Response,next: NextFunction) {
   const { id } = req.params;
   const { userId } = req;
   const { startTime, endTime, active } = req.body;
@@ -70,7 +76,6 @@ export const updateAvailability = async function (req, res, next) {
     start_time: startTime,
     end_time: endTime,
     active,
-    id,
   };
 
   try {
@@ -83,40 +88,43 @@ export const updateAvailability = async function (req, res, next) {
       id,
       values,
     );
-    return res.status(200).json({
+    res.status(200).json({
       sucess: 1,
       availability,
       message: 'eventType update SuccessFull',
     });
-  } catch (error) {
+  } catch (error: any) {
     error.status = 404;
     next(error);
   }
 };
 
-export const updateAvailabilityStatus = async function (req, res, next) {
-  const [userId] = req;
-  const { id } = req.params;
-  const values = {
-    active: req.active || 0,
-  };
-  try {
-    const existAvailability = await AvailabilityController.findOneById(id);
-    if (!existAvailability) {
-      throw new Error('Availability does not exist');
-    }
-    const availability = await AvailabilityController.updateById(
-      userId,
-      id,
-      values,
-    );
-    return req.status(200).json({
-      sucess: 1,
-      availability,
-      message: `${req.active ? 'Availability active' : 'Availability inactive'}`,
-    });
-  } catch (error) {
-    error.status = 404;
-    next(error);
-  }
-};
+
+// not in use
+
+// export const updateAvailabilityStatus = async function (req: Request,res: Response,next: NextFunction) {
+//   const {userId} = req;
+//   const { id } = req.params;
+//   const values = {
+//     active: req.active || 0,
+//   };
+//   try {
+//     const existAvailability = await AvailabilityController.findOneById(id);
+//     if (!existAvailability) {
+//       throw new Error('Availability does not exist');
+//     }
+//     const availability = await AvailabilityController.updateById(
+//       userId,
+//       id,
+//       values,
+//     );
+//      res.status(200).json({
+//       sucess: 1,
+//       availability,
+//       message: `${req.active ? 'Availability active' : 'Availability inactive'}`,
+//     });
+//   } catch (error: any) {
+//     error.status = 404;
+//     next(error);
+//   }
+// };

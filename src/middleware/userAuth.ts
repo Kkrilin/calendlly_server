@@ -5,6 +5,7 @@ import { OAuth2Client } from 'google-auth-library';
 import bcrypt from 'bcrypt';
 import { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
 import { error } from 'console';
+import { UserAttributes } from '../types/model/user.js';
 
 const client = new OAuth2Client(config.googleClientId);
 
@@ -31,7 +32,7 @@ export const validateSignUp = async (req: Request, res: Response, next: NextFunc
     //   throw new Error('Invalid request: userName is already in use');
     // }
 
-    const user: ReturnType<typeof UserController.findOneByEmail> = await UserController.findOneByEmail(email);
+    const user: UserAttributes = await UserController.findOneByEmail(email);
     if (user && user.googleId) {
       throw new Error('Invalid request: user is registered with google account');
     }
@@ -50,7 +51,7 @@ export const validateSignUp = async (req: Request, res: Response, next: NextFunc
 export const validateLogin = async (req: Request, res: Response, next: NextFunction) => {
   const { email } = req.body;
   try {
-    const user = await UserController.findOneByEmail(email);
+    const user: UserAttributes = await UserController.findOneByEmail(email);
     if (!user) {
       throw new Error('user with email is not regsiter');
     }
@@ -75,7 +76,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
       throw new Error('Invalid token payload');
     }
 
-    const user = await UserController.findOneById(decoded.id);
+    const user: UserAttributes = await UserController.findOneById(decoded.id);
     if (!user) throw new Error('User does not exist');
 
     req.userId = decoded.id;
