@@ -1,46 +1,36 @@
-export default function (sequelize, DataTypes) {
-  const Availability = sequelize.define(
+import { Sequelize, DataTypes } from 'sequelize';
+import type {AvailabilityInstance, AvailabilityModelStatic
+} from '../types/model/availability';
+
+export default function defineAvailability(sequelize: Sequelize, dataTypes: typeof DataTypes): AvailabilityModelStatic {
+  const Availability = sequelize.define<AvailabilityInstance>(
     'Availability',
     {
       id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4, // Or DataTypes.UUIDV1
+        type: dataTypes.UUID,
+        defaultValue: dataTypes.UUIDV4,
         primaryKey: true,
       },
-      // title: {
-      //   type: DataTypes.CHAR,
-      //   unique: true,
-      //   allowNull: false,
-      // },
       day_of_week: {
-        type: DataTypes.INTEGER,
+        type: dataTypes.INTEGER,
         allowNull: false,
       },
       start_time: {
-        type: DataTypes.TIME,
-        // allowNull: false,
+        type: dataTypes.TIME,
       },
       end_time: {
-        type: DataTypes.TIME,
-        // allowNull: null,
+        type: dataTypes.TIME,
       },
       active: {
-        type: DataTypes.INTEGER,
+        type: dataTypes.INTEGER,
         allowNull: false,
-        defaultvalue: 1,
+        defaultValue: 1,
       },
-    },
-    // {
-    //   paranoid: true, // Enables soft deletes
-    // },
-  );
+    }
+  ) as AvailabilityModelStatic;
 
   Availability.associate = (models) => {
-    Availability.belongsTo(models.User, {
-      foreignKey: {
-        fieldName: 'userId',
-      },
-    });
+    Availability.belongsTo(models.User, {foreignKey: 'userId'});
   };
 
   return Availability;

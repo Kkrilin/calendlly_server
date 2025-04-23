@@ -1,51 +1,42 @@
-import utils from '../helper/utils.js';
-export default function (sequelize, DataTypes) {
-  const EventType = sequelize.define(
+// models/eventType.ts
+import {Sequelize,DataTypes} from 'sequelize';
+import  {EventTypeInstance,EventTypeModelStatic} from '../types/model/eventType';
+
+export default function defineEventType(sequelize: Sequelize, dataTypes: typeof DataTypes,): EventTypeModelStatic {
+  const EventType = sequelize.define<EventTypeInstance>(
     'EventType',
     {
       id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4, // Or DataTypes.UUIDV1
+        type: dataTypes.UUID,
+        defaultValue: dataTypes.UUIDV4,
         primaryKey: true,
       },
       title: {
-        type: DataTypes.STRING,
+        type: dataTypes.STRING,
         allowNull: false,
       },
       description: {
-        type: DataTypes.TEXT,
+        type: dataTypes.TEXT,
       },
       durationMinutes: {
-        type: DataTypes.INTEGER,
+        type: dataTypes.INTEGER,
         allowNull: false,
       },
       eventSlug: {
-        type: DataTypes.STRING,
+        type: dataTypes.STRING,
         unique: true,
         allowNull: false,
       },
-      // location: {
-      //   type: DataTypes.TEXT,
-      //   allowNull: false,
-      // },
     },
     {
-      paranoid: true, // Enables soft deletes
+      paranoid: true,
     },
-  );
+  ) as EventTypeModelStatic;
 
   EventType.associate = (models) => {
-    EventType.belongsTo(models.User, {
-      foreignKey: {
-        fieldName: 'userId',
-      },
-    });
-    EventType.hasMany(models.Booking, {
-      foreignKey: {
-        fieldName: 'eventTypeId',
-      },
-    });
-    EventType.belongsToMany(models.Booking, { through: 'Event_Booking' });
+    EventType.belongsTo(models.User, {foreignKey: 'userId'});
+    EventType.hasMany(models.Booking, {foreignKey: 'eventTypeId'});
+    EventType.belongsToMany(models.Booking, {through: 'Event_Booking'});
   };
 
   return EventType;

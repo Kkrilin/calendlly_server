@@ -1,6 +1,6 @@
 import UserController from '../controllers/user.js';
 import jwt from 'jsonwebtoken';
-import config from '../../config/config.js';
+import config from '../config/config';
 import { OAuth2Client } from 'google-auth-library';
 import bycrypt from 'bcrypt';
 const client = new OAuth2Client(config.googleClientId);
@@ -49,6 +49,7 @@ export const validateLogin = async (req, res, next) => {
 
 // authenticate protected routes
 export const authenticate = async (req, res, next) => {
+  console.log('req.headers', req.headers)
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; // Extract token from "Bearer <token>"
 

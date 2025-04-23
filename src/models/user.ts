@@ -1,50 +1,50 @@
-export default function (sequelize, DataTypes) {
-  const User = sequelize.define(
+import {Sequelize,DataTypes} from 'sequelize';
+import {UserInstance, UserModelStatic } from '../types/model/user';
+
+// Final export
+export default function defineUserModel(sequelize: Sequelize, dataTypes: typeof DataTypes): UserModelStatic {
+  const User = sequelize.define<UserInstance>(
     'User',
     {
       id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4, // Or DataTypes.UUIDV1
+        type: dataTypes.UUID,
+        defaultValue: dataTypes.UUIDV4,
         primaryKey: true,
       },
       name: {
-        type: DataTypes.STRING,
-        // unique: true,
+        type: dataTypes.STRING,
         allowNull: false,
       },
       email: {
-        type: DataTypes.STRING,
+        type: dataTypes.STRING,
         unique: true,
         allowNull: false,
       },
       password: {
-        type: DataTypes.STRING,
-        // allowNull: false,
+        type: dataTypes.STRING,
       },
       profileSlug: {
-        type: DataTypes.STRING,
+        type: dataTypes.STRING,
         unique: true,
         allowNull: false,
       },
       googleId: {
-        type: DataTypes.STRING,
-        // allowNull: null,
+        type: dataTypes.STRING,
       },
-      refreshToken: DataTypes.TEXT
+      refreshToken: {
+        type: dataTypes.TEXT,
+      },
     },
-    {},
-  );
+    {
+      tableName: 'Users',
+      timestamps: true,
+    },
+  ) as UserModelStatic;
 
   User.associate = (models) => {
-    User.hasMany(models.EventType, {
-      foreignKey: 'userId',
-    });
-    User.hasMany(models.Availability, {
-      foreignKey: 'userId',
-    });
-    User.hasMany(models.Booking, {
-      foreignKey: 'userId',
-    });
+    User.hasMany(models.EventType, { foreignKey: 'userId' });
+    User.hasMany(models.Availability, { foreignKey: 'userId' });
+    User.hasMany(models.Booking, { foreignKey: 'userId' });
   };
 
   return User;

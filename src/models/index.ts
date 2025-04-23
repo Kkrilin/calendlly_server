@@ -1,23 +1,23 @@
 import { Sequelize, DataTypes, Op, Dialect } from 'sequelize';
 import config from '../config/config.js';
 import { logger } from '../helper/logger.js';
-import user from './user.js';
-import eventType from './eventType.js';
-import availability from './availability.js';
-import booking from './booking.js';
+import userModel from './user.js';
+import eventTypeModel from './eventType.js';
+import availabilityModel from './availability.js';
+import bookingModel from './booking.js';
 
-console.log('qqqqqqqqqqq', config);
+
 const sequelize = new Sequelize(
   config.db.database as string,
   config.db.username as string,
-  config.db.password,
+  config.db.password as string,
   {
     host: config.db.host,
     port: parseInt(config.db.port || ''),
     dialect: config.db.dialect as Dialect,
     logging: false,
     ssl: config.db.ssl === 'true',
-    dialectOptions: config.db.ssl
+    dialectOptions: config.db.ssl === 'true'
       ? {
           ssl: {
             require: config.db.ssl === 'true',
@@ -33,27 +33,41 @@ const sequelize = new Sequelize(
     },
   },
 );
-
-const db = {};
+interface DB {
+  sequelize: Sequelize;
+  Sequelize: typeof Sequelize;
+  Op: typeof Op;
+  User: ReturnType<typeof userModel>;
+  EventType: ReturnType<typeof eventTypeModel>;
+  Availability: ReturnType<typeof availabilityModel>;
+  Booking: ReturnType<typeof bookingModel>;
+}
+const db = {} as DB;
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.Op = Op;
+
+
+// model initailization
+db.User = userModel(sequelize, DataTypes);
+db.EventType = eventTypeModel(sequelize, DataTypes);
+db.Availability = availabilityModel(sequelize, DataTypes);
+db.Booking = bookingModel(sequelize, DataTypes);
+
+// association setup
+db.User.associate(db);
+db.EventType.associate(db);
+db.Availability.associate(db);
+db.Booking.associate(db);
+
+// Connect to DB
 db.sequelize
-  .sync({ force: false })
+  .authenticate()
   .then(async () => {
     logger.info('Database connected');
   })
   .catch((err) => {
     logger.info('Failed to sync db: ' + err);
   });
-
-db.User = user(sequelize, DataTypes);
-db.EventType = eventType(sequelize, DataTypes);
-db.Availability = availability(sequelize, DataTypes);
-db.Booking = booking(sequelize, DataTypes);
-db.User.associate(db);
-db.EventType.associate(db);
-db.Availability.associate(db);
-db.Booking.associate(db);
 export default db;

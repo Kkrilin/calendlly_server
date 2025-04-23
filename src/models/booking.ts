@@ -1,67 +1,57 @@
-export default function (sequelize, DataTypes) {
-  const Booking = sequelize.define(
+import { Sequelize, DataTypes } from 'sequelize';
+import type {BookingInstance,BookingModelStatic} from '../types/model/booking';
+
+export default function defineBooking(sequelize: Sequelize, dataTypes: typeof DataTypes): BookingModelStatic {
+  const Booking = sequelize.define<BookingInstance>(
     'Booking',
     {
       id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4, // Or DataTypes.UUIDV1
+        type: dataTypes.UUID,
+        defaultValue: dataTypes.UUIDV4,
         primaryKey: true,
       },
-      // title: {
-      //   type: DataTypes.CHAR,
-      //   unique: true,
-      //   allowNull: false,
-      // },
       guest_name: {
-        type: DataTypes.STRING,
+        type: dataTypes.STRING,
         allowNull: false,
       },
       guest_email: {
-        type: DataTypes.STRING,
+        type: dataTypes.STRING,
         allowNull: false,
       },
       start_time: {
-        type: DataTypes.DATE,
+        type: dataTypes.DATE,
         allowNull: false,
       },
       end_time: {
-        type: DataTypes.DATE,
+        type: dataTypes.DATE,
         allowNull: false,
       },
       reminderSent: {
-        type: DataTypes.BOOLEAN,
+        type: dataTypes.BOOLEAN,
         defaultValue: false,
       },
       isReschedule: {
-        type: DataTypes.BOOLEAN,
+        type: dataTypes.BOOLEAN,
         defaultValue: false,
       },
       rescheduleBy: {
-        type: DataTypes.STRING,
+        type: dataTypes.STRING,
       },
       googleEventId: {
-        type: DataTypes.STRING,
+        type: dataTypes.STRING,
       },
       rescheduleReason: {
-        type: DataTypes.STRING,
+        type: dataTypes.STRING,
       },
     },
     {
-      paranoid: true, // Enables soft deletes
-    },
-  );
+      paranoid: true,
+    }
+  ) as BookingModelStatic;
 
   Booking.associate = (models) => {
-    Booking.belongsTo(models.User, {
-      foreignKey: {
-        fieldName: 'userId',
-      },
-    });
-    Booking.belongsTo(models.EventType, {
-      foreignKey: {
-        fieldName: 'eventTypeId',
-      },
-    });
+    Booking.belongsTo(models.User, {foreignKey: 'userId'});
+    Booking.belongsTo(models.EventType, {foreignKey: 'eventTypeId'});
     Booking.belongsToMany(models.EventType, { through: 'Event_Booking' });
   };
 
