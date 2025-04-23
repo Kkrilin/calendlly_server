@@ -10,7 +10,12 @@ bookingController.findAllByUserId = (userId) => {
     where: {
       userId,
     },
-    include: [{ model: db.EventType }, { model: db.User }],
+    include: [
+      {
+        model: db.EventType,
+      },
+      { model: db.User, attributes: ['id', 'name', 'email', 'profileSlug'] },
+    ],
     order: [['start_time', 'ASC']],
   };
   return db.Booking.findAll(filter);
@@ -22,13 +27,23 @@ bookingController.getOneById = (id) => {
     where: {
       id,
     },
-    include: [{ model: db.EventType }, { model: db.User }],
+    include: [
+      {
+        model: db.EventType,
+      },
+      { model: db.User, attributes: ['id', 'name', 'email', 'profileSlug'] },
+    ],
   };
   return db.Booking.findOne(filter);
 };
 
 //  find booking by id
-bookingController.findAllByDateFilter = (userId, targetDate, nextDay, bookingId) => {
+bookingController.findAllByDateFilter = (
+  userId,
+  targetDate,
+  nextDay,
+  bookingId,
+) => {
   const filter = {
     where: {
       start_time: {
@@ -39,7 +54,7 @@ bookingController.findAllByDateFilter = (userId, targetDate, nextDay, bookingId)
     },
   };
   if (bookingId) {
-    filter.where.id = {[db.Op.ne]: bookingId };
+    filter.where.id = { [db.Op.ne]: bookingId };
   }
   return db.Booking.findAll(filter);
 };
