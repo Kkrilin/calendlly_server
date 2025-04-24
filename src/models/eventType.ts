@@ -3,7 +3,7 @@ import { Sequelize, DataTypes } from 'sequelize';
 import {
   EventTypeInstance,
   EventTypeModelStatic,
-} from '../types/model/eventType';
+} from '../types/model/eventType.ts';
 
 export default function defineEventType(
   sequelize: Sequelize,

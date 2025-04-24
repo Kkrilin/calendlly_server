@@ -1,4 +1,4 @@
-import db from '../models/index';
+import db from '../models/index.ts';
 import { ControllerType } from '../types/index';
 
 const availabilityController: ControllerType = {};

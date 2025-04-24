@@ -1,6 +1,6 @@
 import express from 'express';
-import {getEventTypeForBook} from '../services/eventType';
-import {createBooking,validTimeSlots,getAllEventForBook,getBookings,rescheduleBooking} from '../services/booking';
+import {getEventTypeForBook} from '../services/eventType.ts';
+import {createBooking,validTimeSlots,getAllEventForBook,getBookings,rescheduleBooking} from '../services/booking.ts';
 
 const router = express.Router();
 

@@ -1,4 +1,4 @@
-import db from '../models/index.js';
+import db from '../models/index.ts';
 import { ControllerType } from '../types/index';
 // const booking = db.Booking;
 

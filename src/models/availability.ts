@@ -2,7 +2,7 @@ import { Sequelize, DataTypes } from 'sequelize';
 import type {
   AvailabilityInstance,
   AvailabilityModelStatic,
-} from '../types/model/availability';
+} from '../types/model/availability.ts';
 
 export default function defineAvailability(
   sequelize: Sequelize,

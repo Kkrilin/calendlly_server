@@ -2,7 +2,7 @@ import { Sequelize, DataTypes } from 'sequelize';
 import type {
   BookingInstance,
   BookingModelStatic,
-} from '../types/model/booking';
+} from '../types/model/booking.ts';
 
 export default function defineBooking(
   sequelize: Sequelize,
