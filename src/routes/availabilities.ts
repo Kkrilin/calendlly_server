@@ -3,7 +3,7 @@ import {
   createAvailability,
   updateAvailability,
   getAllAvailability,
-} from '../services/availability.js';
+} from '../services/availability.ts';
 
 const router = express.Router();
 

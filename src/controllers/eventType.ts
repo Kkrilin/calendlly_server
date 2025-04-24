@@ -2,7 +2,7 @@ import db from '../models/index.js';
 import { ControllerType } from '../types/index.js';
 // const eventType = db.EventType;
 
-const eventTypeController : ControllerType = {};
+const eventTypeController: ControllerType = {};
 
 //  find all by user
 eventTypeController.findAllByUserId = (userId) => {

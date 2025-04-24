@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import availabilityController from '../controllers/availability.js';
-import EventTypeController from '../controllers/eventType.js';
-import UserController from '../controllers/user.js';
-import utils from '../helper/utils.js';
+import availabilityController from '../controllers/availability.ts';
+import EventTypeController from '../controllers/eventType.ts';
+import UserController from '../controllers/user.ts';
+import utils from '../helper/utils.ts';
 
 export const getAllEventType = async function (req: Request, res: Response, next: NextFunction) {
   const { userId } = req;

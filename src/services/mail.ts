@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 import 'dotenv/config';
 import moment from 'moment';
-import { logger } from '../helper/logger';
+import { logger } from '../helper/logger.ts';
 import { MailData } from '../types/index';
 const transporter = nodemailer.createTransport({
   service: 'gmail',

@@ -1,8 +1,8 @@
-import UserController from '../controllers/user.js';
-import config from '../config/config.js';
+import UserController from '../controllers/user.ts';
+import config from '../config/config.ts';
 import jwt from 'jsonwebtoken';
 import bycrypt from 'bcrypt';
-import utils from '../helper/utils.js';
+import utils from '../helper/utils.ts';
 import { google } from 'googleapis';
 import { NextFunction, Request, Response } from 'express';
 import { TokenPayload } from 'google-auth-library';

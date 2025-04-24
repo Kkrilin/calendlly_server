@@ -1,8 +1,14 @@
 // models/eventType.ts
-import {Sequelize,DataTypes} from 'sequelize';
-import  {EventTypeInstance,EventTypeModelStatic} from '../types/model/eventType';
+import { Sequelize, DataTypes } from 'sequelize';
+import {
+  EventTypeInstance,
+  EventTypeModelStatic,
+} from '../types/model/eventType';
 
-export default function defineEventType(sequelize: Sequelize, dataTypes: typeof DataTypes,): EventTypeModelStatic {
+export default function defineEventType(
+  sequelize: Sequelize,
+  dataTypes: typeof DataTypes,
+): EventTypeModelStatic {
   const EventType = sequelize.define<EventTypeInstance>(
     'EventType',
     {
@@ -34,9 +40,9 @@ export default function defineEventType(sequelize: Sequelize, dataTypes: typeof 
   ) as EventTypeModelStatic;
 
   EventType.associate = (models) => {
-    EventType.belongsTo(models.User, {foreignKey: 'userId'});
-    EventType.hasMany(models.Booking, {foreignKey: 'eventTypeId'});
-    EventType.belongsToMany(models.Booking, {through: 'Event_Booking'});
+    EventType.belongsTo(models.User, { foreignKey: 'userId' });
+    EventType.hasMany(models.Booking, { foreignKey: 'eventTypeId' });
+    EventType.belongsToMany(models.Booking, { through: 'Event_Booking' });
   };
 
   return EventType;

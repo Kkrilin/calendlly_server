@@ -1,5 +1,5 @@
 import express from 'express';
-import {getEventType,creatEvent,deleteEventType,getAllEventType} from '../services/eventType';
+import {getEventType,creatEvent,deleteEventType,getAllEventType} from '../services/eventType.ts';
 
 const router = express.Router();
 

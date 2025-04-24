@@ -1,8 +1,11 @@
-import {Sequelize, DataTypes} from 'sequelize';
-import {UserInstance, UserModelStatic } from '../types/model/user';
+import { Sequelize, DataTypes } from 'sequelize';
+import { UserInstance, UserModelStatic } from '../types/model/user';
 
 // Final export
-export default function defineUserModel(sequelize: Sequelize, dataTypes: typeof DataTypes): UserModelStatic {
+export default function defineUserModel(
+  sequelize: Sequelize,
+  dataTypes: typeof DataTypes,
+): UserModelStatic {
   const User = sequelize.define<UserInstance>(
     'User',
     {

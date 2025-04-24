@@ -16,7 +16,7 @@ bookingController.findAllByUserId = (userId) => {
       },
       { model: db.User, attributes: ['id', 'name', 'email', 'profileSlug'] },
     ],
-    order: [['start_time', 'ASC']],
+    order: [['start_time', 'ASC'] as [string, 'ASC' | 'DESC']],
   };
   return db.Booking.findAll(filter);
 };
@@ -54,7 +54,7 @@ bookingController.findAllByDateFilter = (
     },
   };
   if (bookingId) {
-    filter.where.id = { [db.Op.ne]: bookingId };
+    (filter.where as any).id = { [db.Op.ne]: bookingId };
   }
   return db.Booking.findAll(filter);
 };

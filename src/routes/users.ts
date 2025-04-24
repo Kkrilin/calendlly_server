@@ -1,6 +1,6 @@
 import express from 'express';
-import { registerUser, login, googleAuth, updateUser } from '../services/user';
-import { validateSignUp, validateLogin } from '../middleware/userAuth';
+import { registerUser, login, googleAuth, updateUser } from '../services/user.ts';
+import { validateSignUp, validateLogin } from '../middleware/userAuth.ts';
 
 const router = express.Router();
 

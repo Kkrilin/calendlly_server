@@ -1,8 +1,7 @@
 import db from '../models/index';
 import { ControllerType } from '../types/index';
 
-
-const availabilityController : ControllerType = {};
+const availabilityController: ControllerType = {};
 
 //  find all by user
 availabilityController.findAllByUserId = (userId) => {
@@ -11,7 +10,7 @@ availabilityController.findAllByUserId = (userId) => {
       userId,
       // active: 1,
     },
-    order: [['day_of_week', 'ASC']],
+    order: [['day_of_week', 'ASC'] as [string, 'ASC' | 'DESC']],
   };
   return db.Availability.findAll(filter);
 };
@@ -38,7 +37,10 @@ availabilityController.updateById = (userId, id, value) => {
 };
 
 //  find one by dayoFWeek
-availabilityController.findAllByDayOfWeek = (userId: string, dayOfWeek: number) => {
+availabilityController.findAllByDayOfWeek = (
+  userId: string,
+  dayOfWeek: number,
+) => {
   const filter = {
     where: {
       userId,

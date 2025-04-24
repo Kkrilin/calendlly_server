@@ -1,14 +1,27 @@
 import cron from 'node-cron';
-import db from '../models/index.js';
-import emailService from './mail.js';
-import { logger } from '../helper/logger.js';
+import db from '../models/index.ts';
+import emailService from './mail.ts';
+import { logger } from '../helper/logger.ts';
+import { BookingInstance } from '../types/model/booking.ts';
+
+interface BookingWithAssociations extends BookingInstance {
+  User: {
+    id: number;
+    name: string;
+    email: string;
+  };
+  EventType: {
+    durationMinutes: number;
+    title: string;
+  };
+}
 
 // cron service for reminder to upcoming event booking every 30 minutes
 cron.schedule('*/30 * * * *', async () => {
   const now = new Date();
   const after30Minute = new Date(now.getTime() + 30 * 60 * 1000);
   try {
-    const bookings = await db.Booking.findAll({
+    const bookings = (await db.Booking.findAll({
       where: {
         start_time: {
           [db.Op.between]: [now, after30Minute],
@@ -20,12 +33,12 @@ cron.schedule('*/30 * * * *', async () => {
         { model: db.EventType, attributes: ['durationMinutes', 'title'] },
         { model: db.User, attributes: ['email', 'name', 'id'] },
       ],
-    });
+    })) as BookingWithAssociations[];
 
     for (const booking of bookings) {
       const data = {
-        email: booking.User.email,
-        name: booking.User.name,
+        email: booking.User?.email || '',
+        name: booking.User?.name,
         guestEmail: booking.guest_email,
         guestName: booking.guest_name,
         duration: booking.EventType.durationMinutes,
@@ -49,7 +62,7 @@ cron.schedule('*/30 * * * *', async () => {
     } else {
       logger.info(`reminder email sent for ${bookings.length}`);
     }
-  } catch (error) {
+  } catch (error: any) {
     logger.error(error.message);
   }
 });

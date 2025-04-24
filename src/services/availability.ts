@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import AvailabilityController from '../controllers/availability.js';
-import { throwDeprecation } from 'process';
+import AvailabilityController from '../controllers/availability.ts';
 
 const dayOfWeeks = {
   sun: 0,
@@ -57,10 +56,10 @@ export const createAvailability = async function (req: Request,res: Response,nex
         };
       });
       const availabilityData = await AvailabilityController.bulkCreateAvailability(availabilityValues);
-       res.status(201).json({ sucess: 1, availabilityData });
+       res.status(201).json({ sucess: 1, availabilities:  availabilityData});
     } else {
       const availabilityData = await AvailabilityController.creatAvailability(values);
-       res.status(201).json({ sucess: 1, availabilityData });
+       res.status(201).json({ sucess: 1, availability: availabilityData });
     }
   } catch (error: any) {
     error.status = 401;

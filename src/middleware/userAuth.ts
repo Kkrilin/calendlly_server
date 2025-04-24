@@ -1,11 +1,10 @@
-import UserController from '../controllers/user.js';
+import UserController from '../controllers/user.ts';
 import jwt from 'jsonwebtoken';
-import config from '../config/config';
+import config from '../config/config.ts';
 import { OAuth2Client } from 'google-auth-library';
 import bcrypt from 'bcrypt';
 import { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
-import { error } from 'console';
-import { UserAttributes } from '../types/model/user.js';
+import { UserAttributes } from '../types/model/user.ts';
 
 const client = new OAuth2Client(config.googleClientId);
 
@@ -18,9 +17,12 @@ declare global {
   }
 }
 
-
 // validate register request
-export const validateSignUp = async (req: Request, res: Response, next: NextFunction) => {
+export const validateSignUp = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const { name, email, password } = req.body;
 
   try {
@@ -34,7 +36,9 @@ export const validateSignUp = async (req: Request, res: Response, next: NextFunc
 
     const user: UserAttributes = await UserController.findOneByEmail(email);
     if (user && user.googleId) {
-      throw new Error('Invalid request: user is registered with google account');
+      throw new Error(
+        'Invalid request: user is registered with google account',
+      );
     }
     if (user) {
       throw new Error('Invalid request: userEmail is already in use');
@@ -48,7 +52,11 @@ export const validateSignUp = async (req: Request, res: Response, next: NextFunc
 };
 
 // validate login request
-export const validateLogin = async (req: Request, res: Response, next: NextFunction) => {
+export const validateLogin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const { email } = req.body;
   try {
     const user: UserAttributes = await UserController.findOneByEmail(email);
@@ -63,7 +71,11 @@ export const validateLogin = async (req: Request, res: Response, next: NextFunct
 };
 
 // authenticate protected routes
-export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
+export const authenticate = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
@@ -86,4 +98,3 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     next(error);
   }
 };
-

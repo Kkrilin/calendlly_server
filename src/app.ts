@@ -1,22 +1,22 @@
 import express from 'express';
-import config from './config/config';
+import config from './config/config.ts';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import cors, { CorsOptions } from 'cors';
-import { logger, transport } from './helper/logger';
+import { logger, transport } from './helper/logger.ts';
 // import './services/cron';
-import db from './models/index';
+import db from './models/index.ts';
 
 // import router
-import userRouter from './routes/users';
-import eventTypeRouter from './routes/eventTypes';
-import availabilityRouter from './routes/availabilities';
-import bookingRouter from './routes/bookings';
-import publicRouter from './routes/publics';
+import userRouter from './routes/users.ts';
+import eventTypeRouter from './routes/eventTypes.ts';
+import availabilityRouter from './routes/availabilities.ts';
+import bookingRouter from './routes/bookings.ts';
+import publicRouter from './routes/publics.ts';
 
 // import  middleware
-import errorHandler from './middleware/errorHandler';
-import { authenticate } from './middleware/userAuth';
+import errorHandler from './middleware/errorHandler.ts';
+import { authenticate } from './middleware/userAuth.ts';
 
 const app = express();
 const port = config.serverPort || 3000;

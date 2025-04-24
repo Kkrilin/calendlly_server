@@ -1,7 +1,13 @@
 import { Sequelize, DataTypes } from 'sequelize';
-import type {BookingInstance,BookingModelStatic} from '../types/model/booking';
+import type {
+  BookingInstance,
+  BookingModelStatic,
+} from '../types/model/booking';
 
-export default function defineBooking(sequelize: Sequelize, dataTypes: typeof DataTypes): BookingModelStatic {
+export default function defineBooking(
+  sequelize: Sequelize,
+  dataTypes: typeof DataTypes,
+): BookingModelStatic {
   const Booking = sequelize.define<BookingInstance>(
     'Booking',
     {
@@ -46,12 +52,12 @@ export default function defineBooking(sequelize: Sequelize, dataTypes: typeof Da
     },
     {
       paranoid: true,
-    }
+    },
   ) as BookingModelStatic;
 
   Booking.associate = (models) => {
-    Booking.belongsTo(models.User, {foreignKey: 'userId'});
-    Booking.belongsTo(models.EventType, {foreignKey: 'eventTypeId'});
+    Booking.belongsTo(models.User, { foreignKey: 'userId' });
+    Booking.belongsTo(models.EventType, { foreignKey: 'eventTypeId' });
     Booking.belongsToMany(models.EventType, { through: 'Event_Booking' });
   };
 

@@ -7,6 +7,7 @@ import moment from 'moment-timezone';
 import config from '../config/config.js';
 import crypto from 'crypto';
 import { Buffer } from 'buffer';
+import { BookingAttributes } from '../types/model/booking.js';
 
 const { encryptionKey } = config;
 const IV_LENGTH = 16;
@@ -77,7 +78,11 @@ utils.uniqueEventTypeSlug = async (slug) => {
   return uniqueSlug;
 };
 
-utils.mergeDateAndTimeWithDuration = (dateStr: string, timeStr: string, duration: string) => {
+utils.mergeDateAndTimeWithDuration = (
+  dateStr: string,
+  timeStr: string,
+  duration: string,
+) => {
   const [time, period] = timeStr.split(' ');
   let [h, m] = time.split(':').map(Number);
 
@@ -147,16 +152,20 @@ utils.getTimeSlots = async (
     nextDay,
     bookingId,
   );
-  const plainBookings = bookings.map((b) => b.get({ plain: true }));
-  const bookedIntervals = plainBookings
-    .map((book) => ({
+  // const plainBookings = bookings.map((b) => b.get({ plain: true }));
+  const bookedIntervals = bookings
+    .map((book: BookingAttributes) => ({
       start: moment.utc(book.start_time).tz('Asia/Kolkata'),
       end: moment.utc(book.end_time).tz('Asia/Kolkata'),
     }))
-    .sort((a, b) => a.start - b.start);
+    .sort(
+      (
+        a: { start: moment.Moment; end: moment.Moment },
+        b: { start: moment.Moment; end: moment.Moment },
+      ) => a.start.valueOf() - b.start.valueOf(),
+    );
 
   let current = startDateTime.clone();
-
   for (let i = 0; i <= bookedIntervals.length; i++) {
     const booking = bookedIntervals[i];
     const nextBlockedStart = booking ? booking.start : endDateTime;

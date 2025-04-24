@@ -1,5 +1,5 @@
 import express from 'express';
-import {getAllBooking,deleteBooking} from '../services/booking.js';
+import {getAllBooking,deleteBooking} from '../services/booking.ts';
 
 const router = express.Router();
 
