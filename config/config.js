@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-
 import 'dotenv/config';
 
 const env = process.env.NODE_ENV || 'development';
@@ -23,6 +21,8 @@ const config = {
     googleSecretClient: process.env.GOOGLE_CLIENT_SECRET,
     encryptionKey: process.env.ENCRYPTION_KEY,
     redirectUri: process.env.GOOGLE_REDIRECT_URI,
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
   },
   production: {
     serverPort: process.env.SERVER_PORT,
@@ -42,6 +42,8 @@ const config = {
     googleSecretClient: process.env.GOOGLE_CLIENT_SECRET,
     encryptionKey: process.env.ENCRYPTION_KEY,
     redirectUri: process.env.GOOGLE_REDIRECT_URI,
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
   },
 };
 

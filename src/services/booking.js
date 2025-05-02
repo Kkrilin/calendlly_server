@@ -8,7 +8,7 @@ import { google } from 'googleapis';
 import config from '../../config/config.js';
 import db from '../models/index.js';
 import emailService from './mail.js';
-import sequelize, { where } from 'sequelize';
+import { logger } from '../../config/logger.js';
 
 const { googleClientId, googleSecretClient } = config;
 const oauth2Client = new google.auth.OAuth2(googleClientId, googleSecretClient);
@@ -25,9 +25,6 @@ export const getAllBooking = async function (req, res, next) {
         return acc;
       }, {});
     }
-    const bookingsss = Object.fromEntries(
-      Object.values(bookings).sort((a, b) => b[0] - a[0]),
-    );
 
     return res.status(200).json({ sucess: 1, bookings });
   } catch (error) {
@@ -63,7 +60,6 @@ export const deleteBooking = async function (req, res, next) {
 export const validTimeSlots = async function (req, res, next) {
   const { userId, eventTypeId } = req.params;
   const { meetingDate, bookingId } = req.query;
-  console.log('bookingId', bookingId);
   const dayOfWeek = moment.utc(meetingDate).tz('Asia/Kolkata').day();
   try {
     const eventType = await EventTypeController.findOneByIdForBook(
@@ -175,15 +171,10 @@ export const createBooking = async function (req, res, next) {
           },
         });
         const googleEventId = resGoogleEvent.data.id;
-        const value = {
-          googleEventId,
-        };
-        // console.log()
-        // db.Booking.update(value, { where: { id: booking.id } });
         booking.googleEventId = googleEventId;
         await booking.save();
       } catch (calendarErr) {
-        console.error(
+        logger.error(
           'Google Calendar Error:',
           calendarErr.response?.data || calendarErr.message || calendarErr,
         );
@@ -302,7 +293,7 @@ export const rescheduleBooking = async function (req, res, next) {
           },
         });
       } catch (calendarErr) {
-        console.error(
+        logger.error(
           'Google Calendar Error:',
           calendarErr.response?.data || calendarErr.message || calendarErr,
         );

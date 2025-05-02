@@ -1,9 +1,8 @@
 import UserController from '../controllers/user.js';
 import jwt from 'jsonwebtoken';
 import config from '../../config/config.js';
-import { OAuth2Client } from 'google-auth-library';
 import bycrypt from 'bcrypt';
-const client = new OAuth2Client(config.googleClientId);
+
 // validate register request
 export const validateSignUp = async (req, re, next) => {
   const { name, email, password } = req.body;
@@ -12,11 +11,6 @@ export const validateSignUp = async (req, re, next) => {
     if (!name || !email || !password) {
       throw new Error(`please send ${!name || !email || !password}`);
     }
-    // const userByName = await UserController.findOneByName(name);
-    // if (userByName) {
-    //   throw new Error('Invalid request: userName is already in use');
-    // }
-
     const user = await UserController.findOneByEmail(email);
     if (user && user.googleId) {
       throw new Error('Invalid request: user is registered with google account');

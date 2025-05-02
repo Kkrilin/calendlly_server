@@ -2,12 +2,14 @@ import nodemailer from 'nodemailer';
 import 'dotenv/config';
 import moment from 'moment';
 import { logger } from '../../config/logger.js';
+import config from '../../config/config.js';
 
+const {user, pass} = config
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
+    user,
+    pass,
   },
 });
 
@@ -35,7 +37,7 @@ emailService.toHost = async ({
 `;
 
   await transporter.sendMail({
-    from: process.env.MAIL_USER,
+    from: user,
     to: email,
     subject: 'Booking Confirmation',
     html,
@@ -65,7 +67,7 @@ emailService.toGuest = async ({
 `;
   console.log('guestEmail', guestEmail);
   await transporter.sendMail({
-    from: process.env.MAIL_USER,
+    from: user,
     to: guestEmail,
     subject: 'Booking Confirmation',
     html,
@@ -107,20 +109,6 @@ emailService.sendBookingConfirmation = async ({
     };
     await emailService.toHost(data);
     await emailService.toGuest(data);
-    // const html = `
-    //   <h3>Hi ${guestName},</h3>
-    //   <p>Your booking for an event on  <strong>${eventName}</strong> on google calender is confirmed.</p>
-    //   <p><strong>Date:</strong> ${formattedDate}</p>
-    //   <p><strong>Duration:</strong> ${duration} minutes</p>
-    //   <p>Looking forward to seeing you!</p>
-    // `;
-
-    // await transporter.sendMail({
-    //   from: process.env.MAIL_USER,
-    //   to: [to, by],
-    //   subject: 'Booking Confirmation',
-    //   html,
-    // });
 
     console.log('Email sent successfully');
   } catch (error) {
@@ -147,12 +135,3 @@ emailService.reminderNotificationEmail = async (data) => {
 };
 
 export default emailService;
-
-// const data = {
-//   guestName: 'kundan',
-//   eventName: 'testing',
-//   date: new Date().toLocaleString(),
-//   duration: 30,
-// };
-
-// emailService.sendBookingConfirmation(data);

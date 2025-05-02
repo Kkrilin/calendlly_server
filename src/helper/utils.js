@@ -1,5 +1,4 @@
 import slug from 'slug';
-import db from '../models/index.js';
 import UserController from '../controllers/user.js';
 import eventTypeController from '../controllers/eventType.js';
 import BookingController from '../controllers/booking.js';
@@ -189,33 +188,6 @@ utils.format12Hour = (date) => {
     minute: '2-digit',
     hour12: true,
   });
-};
-
-utils.timeExistInBetweenWithDuration = (slot, startTime, endTime, duration) => {
-  const time = moment(slot, 'hh:mm A');
-  const timeAfterDuration = time.clone().add(duration, 'minutes');
-  const time1 = moment(startTime, 'hh:mm A');
-  const time2 = moment(endTime, 'hh:mm A');
-
-  return (
-    timeAfterDuration.isAfter(time1) &&
-    (timeAfterDuration.isBefore(time2) || timeAfterDuration.isSame(time2))
-  );
-};
-
-utils.timeExistInBetween = (slot, startTime, endTime) => {
-  const time = moment(slot, 'hh:mm A');
-  const time1 = moment(startTime, 'hh:mm A');
-  const time2 = moment(endTime, 'hh:mm A');
-
-  return time.isAfter(time1) && time.isBefore(time2);
-};
-
-utils.timeDiff = (time1, time2) => {
-  const start = moment('09:00 AM', 'hh:mm A');
-  const end = moment('09:15 AM', 'hh:mm A');
-
-  return end.diff(start, 'minutes');
 };
 
 export default utils;

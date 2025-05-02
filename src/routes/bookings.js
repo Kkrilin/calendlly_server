@@ -9,7 +9,4 @@ const router = express();
 router.get('/', getAllBooking);
 router.delete('/:id', deleteBooking);
 
-// public
-
-
 export default router;

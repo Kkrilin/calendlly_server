@@ -41,7 +41,6 @@ cron.schedule('*/30 * * * *', async () => {
         },
       };
       await db.Booking.update({ reminderSent: true }, filter);
-      logger.info(``);
     }
 
     if (!bookings.length) {

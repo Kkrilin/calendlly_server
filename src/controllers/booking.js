@@ -1,7 +1,5 @@
 import db from '../models/index.js';
 
-// const booking = db.Booking;
-
 const bookingController = {};
 
 //  find all by user

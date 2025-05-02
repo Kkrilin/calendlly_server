@@ -1,7 +1,5 @@
 import db from '../models/index.js';
 
-// const eventType = db.EventType;
-
 const eventTypeController = {};
 
 //  find all by user

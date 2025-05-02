@@ -1,7 +1,5 @@
 import db from '../models/index.js';
 
-const availability = db.Availability;
-
 const availabilityController = {};
 
 //  find all by user

@@ -1,4 +1,3 @@
-import availabilityController from '../controllers/availability.js';
 import EventTypeController from '../controllers/eventType.js';
 import UserController from '../controllers/user.js';
 import utils from '../helper/utils.js';
@@ -29,7 +28,6 @@ export const getEventType = async function (req, res, next) {
 export const getEventTypeForBook = async function (req, res, next) {
   const { userId, eventTypeId } = req.params;
   try {
-    // const availabilities = await availabilityController.findAllByUserId(userId);
     const user = await UserController.findOneById(userId);
     if (!user) {
       throw new Error('user do not exist');

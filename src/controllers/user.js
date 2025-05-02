@@ -1,7 +1,5 @@
 import db from '../models/index.js';
 
-// const user = db.User;
-
 const UserController = {};
 
 //  find user by name

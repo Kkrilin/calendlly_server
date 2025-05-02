@@ -1,4 +1,3 @@
-import utils from '../helper/utils.js';
 export default function (sequelize, DataTypes) {
   const EventType = sequelize.define(
     'EventType',
@@ -24,10 +23,6 @@ export default function (sequelize, DataTypes) {
         unique: true,
         allowNull: false,
       },
-      // location: {
-      //   type: DataTypes.TEXT,
-      //   allowNull: false,
-      // },
     },
     {
       paranoid: true, // Enables soft deletes

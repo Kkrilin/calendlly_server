@@ -5,7 +5,6 @@ import morgan from 'morgan';
 import cors from 'cors';
 import { logger, transport } from './config/logger.js';
 import './src/services/cron.js';
-import db from './src/models/index.js';
 
 // import router
 import userRouter from './src/routes/users.js';
