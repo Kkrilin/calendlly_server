@@ -12,6 +12,7 @@ import eventTypeRouter from './src/routes/eventTypes.js';
 import availabilityRouter from './src/routes/availabilities.js';
 import bookingRouter from './src/routes/bookings.js';
 import publicRouter from './src/routes/publics.js';
+import authRouter from './src/routes/auth.js';
 
 // import  middleware
 import errorHandler from './src/middleware/errorHandler.js';
@@ -54,7 +55,7 @@ app.use('/running', (req, res) => {
 });
 
 // user router
-app.use('/auth', userRouter);
+app.use('/auth', authRouter);
 app.use('/api/*', authenticate);
 // procted route
 app.use('/api/users', userRouter);

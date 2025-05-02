@@ -1,12 +1,8 @@
 import express from 'express';
-import { registerUser, login, googleAuth, updateUser } from '../services/user.js';
-import { validateSignUp, validateLogin } from '../middleware/userAuth.js';
+import { updateUser, getUser } from '../services/user.js';
 
 const router = express();
 
-router.post('/signup', validateSignUp, registerUser);
-router.post('/login', validateLogin, login);
-router.post('/google', googleAuth);
-router.post('/', updateUser);
+router.route('/').get(getUser).post(updateUser);
 
 export default router;
