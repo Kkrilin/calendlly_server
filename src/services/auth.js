@@ -28,7 +28,6 @@ export const registerUser = async function (req, res, next) {
       //   res.cookie('jwt', token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
       res.status(201).json({
         success: 1,
-        userData: { id: user.id, name: user.name, email: user.email },
         token,
       });
     } else {
@@ -56,7 +55,6 @@ export const login = async function (req, res, next) {
         // });
         return res.status(200).json({
           success: 1,
-          userData: { id: user.id, name: user.name, email: user.email },
           token,
         });
       } else {

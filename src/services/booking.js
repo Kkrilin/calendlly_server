@@ -210,7 +210,10 @@ export const getBookings = async function (req, res, next) {
     if (!booking) {
       throw new Error('booking is cancelled');
     }
-    return res.status(201).json({ sucess: 1, booking });
+    const availabilities = await AvailabilityController.findAllByUserId(
+      booking.userId,
+    );
+    return res.status(201).json({ sucess: 1, booking, availabilities });
   } catch (error) {
     error.status = 401;
     next(error);

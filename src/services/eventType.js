@@ -1,3 +1,4 @@
+import AvailabilityController from '../controllers/availability.js';
 import EventTypeController from '../controllers/eventType.js';
 import UserController from '../controllers/user.js';
 import utils from '../helper/utils.js';
@@ -36,7 +37,8 @@ export const getEventTypeForBook = async function (req, res, next) {
       userId,
       eventTypeId,
     );
-    return res.status(200).json({ sucess: 1, eventType });
+    const availabilities = await AvailabilityController.findAllByUserId(userId);
+    return res.status(200).json({ sucess: 1, eventType, availabilities });
   } catch (error) {
     error.status = 404;
     next(error);
