@@ -44,6 +44,9 @@ export const login = async function (req, res, next) {
     const { email, password } = req.body;
     const user = await UserController.findOneByEmail(email);
     if (user) {
+      if(user.googleId){
+        throw new Error("user is login with google")
+      }
       const isSame = await bycrypt.compare(password, user.password);
       if (isSame) {
         const token = jwt.sign({ id: user.id }, config.secretKey, {
